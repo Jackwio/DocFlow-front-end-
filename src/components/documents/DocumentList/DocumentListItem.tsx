@@ -3,8 +3,10 @@
  * Individual document list item with status badge and metadata
  */
 
+import { useState } from 'react';
 import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { formatFileSize, formatDate } from '@/utils/formatting';
 import type { DocumentListDto, DocumentStatus } from '@/types';
 import { clsx } from 'clsx';
@@ -16,6 +18,7 @@ export interface DocumentListItemProps {
   onClick?: (id: string) => void;
   onRetry?: (id: string) => void;
   className?: string;
+  showCheckbox?: boolean;
 }
 
 export function DocumentListItem({
@@ -25,7 +28,9 @@ export function DocumentListItem({
   onClick,
   onRetry,
   className,
+  showCheckbox = false,
 }: DocumentListItemProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const isFailed = document.status === 2; // DocumentStatus.Failed
 
   return (
@@ -33,10 +38,14 @@ export function DocumentListItem({
       className={clsx(
         'border border-neutral-200 rounded-lg p-4 transition-all duration-150',
         'hover:shadow-md hover:border-primary-300',
+        // T145: Add light gray background on hover
+        isHovered && 'bg-neutral-50',
         isSelected && 'ring-2 ring-primary-500 border-primary-500',
         onClick && 'cursor-pointer',
         className
       )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick?.(document.id)}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -48,18 +57,25 @@ export function DocumentListItem({
       }}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          {onSelect && (
-            <input
-              type="checkbox"
-              checked={isSelected}
-              onChange={() => onSelect(document.id)}
-              onClick={(e) => e.stopPropagation()}
-              className="mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
-              aria-label={`Select ${document.fileName}`}
-            />
+        <div className="flex items-start gap-3 flex-1 min-w-0">
+          {/* T144: Show checkbox on hover with fade-in animation */}
+          {showCheckbox && onSelect && (
+            <div
+              className={clsx(
+                'transition-opacity duration-150 ease-in-out',
+                isHovered || isSelected ? 'opacity-100' : 'opacity-0'
+              )}
+            >
+              <Checkbox
+                checked={isSelected}
+                onChange={() => onSelect(document.id)}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                aria-label={`Select ${document.fileName}`}
+              />
+            </div>
           )}
-          <div className="inline-block">
+          
+          <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold text-neutral-900 truncate">
               {document.fileName}
             </h3>

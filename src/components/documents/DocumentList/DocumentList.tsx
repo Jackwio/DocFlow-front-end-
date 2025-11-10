@@ -4,6 +4,7 @@
  */
 
 import { DocumentListItem } from './DocumentListItem';
+import { Checkbox } from '@/components/ui/Checkbox';
 import type { DocumentListDto } from '@/types';
 import { clsx } from 'clsx';
 
@@ -14,6 +15,9 @@ export interface DocumentListProps {
   onDocumentSelect?: (id: string) => void;
   onDocumentClick?: (id: string) => void;
   onDocumentRetry?: (id: string) => void;
+  onSelectAll?: () => void;
+  onDeselectAll?: () => void;
+  showBatchActions?: boolean;
   className?: string;
 }
 
@@ -24,8 +28,23 @@ export function DocumentList({
   onDocumentSelect,
   onDocumentClick,
   onDocumentRetry,
+  onSelectAll,
+  onDeselectAll,
+  showBatchActions = false,
   className,
 }: DocumentListProps) {
+  // Calculate selection state for header checkbox
+  const allSelected = documents.length > 0 && selectedDocumentIds.length === documents.length;
+  const someSelected = selectedDocumentIds.length > 0 && selectedDocumentIds.length < documents.length;
+
+  const handleHeaderCheckboxChange = () => {
+    if (allSelected) {
+      onDeselectAll?.();
+    } else {
+      onSelectAll?.();
+    }
+  };
+
   if (isLoading) {
     return (
       <div className={clsx('flex items-center justify-center py-12', className)}>
@@ -86,17 +105,39 @@ export function DocumentList({
   }
 
   return (
-    <div className={clsx('space-y-3', className)} role="list">
-      {documents.map((document) => (
-        <DocumentListItem
-          key={document.id}
-          document={document}
-          isSelected={selectedDocumentIds.includes(document.id)}
-          onSelect={onDocumentSelect}
-          onClick={onDocumentClick}
-          onRetry={onDocumentRetry}
-        />
-      ))}
+    <div className={className}>
+      {/* T148: Select All / Deselect All Header */}
+      {showBatchActions && onSelectAll && onDeselectAll && (
+        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-neutral-200">
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected}
+            onChange={handleHeaderCheckboxChange}
+            label={
+              allSelected
+                ? 'Deselect all'
+                : someSelected
+                ? `${selectedDocumentIds.length} selected`
+                : 'Select all'
+            }
+            aria-label="Select all documents"
+          />
+        </div>
+      )}
+
+      <div className="space-y-3" role="list">
+        {documents.map((document) => (
+          <DocumentListItem
+            key={document.id}
+            document={document}
+            isSelected={selectedDocumentIds.includes(document.id)}
+            onSelect={onDocumentSelect}
+            onClick={onDocumentClick}
+            onRetry={onDocumentRetry}
+            showCheckbox={showBatchActions}
+          />
+        ))}
+      </div>
     </div>
   );
 }
