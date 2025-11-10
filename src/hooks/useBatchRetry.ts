@@ -1,6 +1,6 @@
 /**
  * useBatchRetry hook
- * Mutation for retrying multiple failed document classifications in batch
+ * Mutation for retrying classification of multiple documents
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,18 +9,8 @@ import { useUIStore } from '@/state/useUIStore';
 import type { DocumentDto } from '@/types';
 
 export interface BatchRetryResult {
-  documentId: string;
-  fileName: string;
-  success: boolean;
-  error?: string;
-}
-
-export interface BatchRetryProgress {
-  total: number;
-  completed: number;
-  successful: number;
-  failed: number;
-  results: BatchRetryResult[];
+  successful: string[];
+  failed: Array<{ id: string; error: string }>;
 }
 
 export function useBatchRetry() {
@@ -28,86 +18,62 @@ export function useBatchRetry() {
   const addNotification = useUIStore((state) => state.addNotification);
 
   return useMutation({
-    mutationFn: async (documentIds: string[]): Promise<BatchRetryProgress> => {
-      const progress: BatchRetryProgress = {
-        total: documentIds.length,
-        completed: 0,
-        successful: 0,
-        failed: 0,
-        results: [],
+    mutationFn: async (documentIds: string[]): Promise<BatchRetryResult> => {
+      const results: BatchRetryResult = {
+        successful: [],
+        failed: [],
       };
 
-      // Process each document sequentially to avoid overwhelming the server
-      for (const documentId of documentIds) {
+      // Process all retries in parallel
+      const promises = documentIds.map(async (id) => {
         try {
-          const document: DocumentDto = await DocumentsApiService.retryClassification(documentId);
-          
-          progress.results.push({
-            documentId: document.id,
-            fileName: document.fileName,
-            success: true,
-          });
-          progress.successful++;
+          await DocumentsApiService.retryClassification(id);
+          results.successful.push(id);
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-          
-          // Try to get document name for better error reporting
-          let fileName = documentId;
-          try {
-            const doc = await DocumentsApiService.getDocument(documentId);
-            fileName = doc.fileName;
-          } catch {
-            // If we can't get the document, use the ID
-          }
-          
-          progress.results.push({
-            documentId,
-            fileName,
-            success: false,
-            error: errorMessage,
+          results.failed.push({
+            id,
+            error: error instanceof Error ? error.message : 'Unknown error',
           });
-          progress.failed++;
         }
-        
-        progress.completed++;
-      }
+      });
 
-      return progress;
+      await Promise.all(promises);
+      return results;
     },
-    onSuccess: (progress: BatchRetryProgress) => {
+    onSuccess: (results: BatchRetryResult) => {
       // Invalidate queries to refresh the list
       queryClient.invalidateQueries({ queryKey: ['documents'] });
 
-      // Show summary notification
-      if (progress.failed === 0) {
+      // Show success notification
+      if (results.successful.length > 0) {
         addNotification({
           type: 'success',
-          message: 'Batch retry completed',
-          description: `Successfully retried ${progress.successful} document${progress.successful !== 1 ? 's' : ''}.`,
+          message: 'Batch retry initiated',
+          description: `${results.successful.length} document${
+            results.successful.length === 1 ? '' : 's'
+          } ${results.successful.length === 1 ? 'is' : 'are'} being reclassified.`,
           duration: 5000,
         });
-      } else if (progress.successful === 0) {
+      }
+
+      // Show error notification if any failed
+      if (results.failed.length > 0) {
         addNotification({
           type: 'error',
-          message: 'Batch retry failed',
-          description: `Failed to retry all ${progress.failed} document${progress.failed !== 1 ? 's' : ''}.`,
-          duration: 7000,
-        });
-      } else {
-        addNotification({
-          type: 'warning',
-          message: 'Batch retry completed with errors',
-          description: `Successfully retried ${progress.successful} document${progress.successful !== 1 ? 's' : ''}, ${progress.failed} failed.`,
+          message: 'Some retries failed',
+          description: `${results.failed.length} document${
+            results.failed.length === 1 ? '' : 's'
+          } failed to retry.`,
           duration: 7000,
         });
       }
     },
     onError: (error: Error) => {
-      // Show error notification for unexpected failures
+      // Show error notification
       addNotification({
         type: 'error',
         message: 'Batch retry failed',
-        description: error.message || 'An unexpected error occurred during batch retry.',
+        description: error.message || 'Failed to retry classifications.',
         duration: 7000,
       });
     },

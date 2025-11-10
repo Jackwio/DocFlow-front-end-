@@ -1,95 +1,111 @@
 /**
- * Checkbox component
- * Accessible checkbox with animation and indeterminate state support
+ * Checkbox component with accessible states and animations
+ * Supports checked, unchecked, and indeterminate states
  */
 
-import { forwardRef, InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface CheckboxProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /**
-   * Indeterminate state (for "select all" functionality)
+   * Indeterminate state (for "select all" partial selection)
    */
   indeterminate?: boolean;
   /**
-   * Additional CSS classes
-   */
-  className?: string;
-  /**
-   * Label for the checkbox
+   * Label text for the checkbox
    */
   label?: string;
+  /**
+   * Error state
+   */
+  error?: boolean;
 }
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ indeterminate = false, className, label, ...props }, ref) => {
+  (
+    {
+      indeterminate = false,
+      label,
+      error = false,
+      className,
+      disabled,
+      checked,
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles =
+      'h-4 w-4 rounded border-2 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50';
+
+    const stateStyles = error
+      ? 'border-status-failed-dark text-status-failed-dark'
+      : 'border-neutral-300 text-primary-600 hover:border-primary-500';
+
+    const checkedStyles =
+      checked || indeterminate
+        ? 'bg-primary-600 border-primary-600'
+        : 'bg-white';
+
     return (
       <label
         className={clsx(
-          'inline-flex items-center gap-2 cursor-pointer group',
-          props.disabled && 'cursor-not-allowed opacity-50',
+          'inline-flex items-center gap-2',
+          disabled && 'cursor-not-allowed opacity-50',
           className
         )}
       >
-        <div className="relative">
+        <div className="relative inline-flex items-center">
           <input
+            ref={ref}
             type="checkbox"
-            className={clsx(
-              'h-4 w-4 rounded border-neutral-300 text-primary-600',
-              'transition-all duration-200 ease-in-out',
-              'focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              'hover:border-primary-400',
-              'disabled:cursor-not-allowed disabled:bg-neutral-100',
-              // Indeterminate state styling
-              indeterminate && 'indeterminate:bg-primary-600 indeterminate:border-primary-600',
-              // Animation on check
-              'checked:scale-110 checked:animate-[checkBounce_0.2s_ease-in-out]'
-            )}
+            className={clsx(baseStyles, stateStyles, checkedStyles)}
+            disabled={disabled}
+            checked={checked}
+            aria-checked={indeterminate ? 'mixed' : checked}
             {...props}
-            // Handle indeterminate state and forward ref
-            ref={(node) => {
-              if (node) {
-                node.indeterminate = indeterminate;
-              }
-              if (typeof ref === 'function') {
-                ref(node);
-              } else if (ref) {
-                ref.current = node;
-              }
-            }}
           />
-          {/* Visual checkmark indicator for better feedback */}
-          {(props.checked || indeterminate) && (
-            <div
-              className={clsx(
-                'absolute inset-0 pointer-events-none flex items-center justify-center',
-                'transition-opacity duration-150',
-                props.checked ? 'opacity-100' : 'opacity-0'
-              )}
+          {/* Checkmark icon */}
+          {checked && !indeterminate && (
+            <svg
+              className="absolute left-0 top-0 h-4 w-4 pointer-events-none text-white animate-checkmark"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
-              <svg
-                className="w-3 h-3 text-white"
-                fill="none"
+              <path
+                d="M13 4L6 11L3 8"
+                stroke="currentColor"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="3"
-                viewBox="0 0 24 24"
+              />
+            </svg>
+          )}
+          {/* Indeterminate icon (horizontal line) */}
+          {indeterminate && (
+            <svg
+              className="absolute left-0 top-0 h-4 w-4 pointer-events-none text-white"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 8H12"
                 stroke="currentColor"
-              >
-                {indeterminate ? (
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                ) : (
-                  <polyline points="20 6 9 17 4 12" />
-                )}
-              </svg>
-            </div>
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
           )}
         </div>
         {label && (
           <span
             className={clsx(
-              'text-sm text-neutral-700 select-none',
-              'group-hover:text-neutral-900 transition-colors'
+              'text-sm text-neutral-700',
+              disabled && 'text-neutral-400'
             )}
           >
             {label}

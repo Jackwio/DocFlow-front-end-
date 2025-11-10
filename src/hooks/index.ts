@@ -26,4 +26,4 @@ export { useDocumentSelection } from './useDocumentSelection';
 export type { UseDocumentSelectionReturn } from './useDocumentSelection';
 
 export { useBatchRetry } from './useBatchRetry';
-export type { BatchRetryResult, BatchRetryProgress } from './useBatchRetry';
+export type { BatchRetryResult } from './useBatchRetry';

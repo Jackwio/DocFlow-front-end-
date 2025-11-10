@@ -5,6 +5,13 @@
 
 import { UploadZone } from '@/components/documents/UploadZone';
 import { DocumentList } from '@/components/documents/DocumentList';
+import { BatchActionBar } from '@/components/documents/BatchActionBar';
+import { Modal } from '@/components/ui/Modal';
+import { ToastContainer } from '@/components/ui/Toast';
+import { useDocuments } from '@/hooks/useDocuments';
+import { useDocumentSelection } from '@/hooks/useDocumentSelection';
+import { useRetryClassification } from '@/hooks/useRetryClassification';
+import { useBatchRetry } from '@/hooks/useBatchRetry';
 import { DocumentDetailPanel } from '@/components/documents/DocumentDetailPanel';
 import { BatchActionBar } from '@/components/documents/BatchActionBar';
 import { ToastContainer } from '@/components/ui/Toast';
@@ -17,19 +24,19 @@ import { useUIStore } from '@/state/useUIStore';
 import { DocumentStatus } from '@/types';
 
 export function DocumentsPage() {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { documents, isLoading, totalCount } = useDocuments();
   const retryMutation = useRetryClassification();
   const batchRetryMutation = useBatchRetry();
   const openDetailPanel = useUIStore((state) => state.openDetailPanel);
-  const closeDetailPanel = useUIStore((state) => state.closeDetailPanel);
-  const detailPanelDocumentId = useUIStore((state) => state.detailPanelDocumentId);
   
-  // Use the document selection hook for batch operations
+  // T143: Use document selection hook
   const {
     selectedIds,
+    isSelected,
     toggleSelection,
     selectAll,
-    clearSelection,
+    deselectAll,
     selectedCount,
   } = useDocumentSelection();
 
@@ -92,6 +99,37 @@ export function DocumentsPage() {
     });
   };
 
+  // T148: Select all / deselect all
+  const handleSelectAll = () => {
+    selectAll(documents.map((doc) => doc.id));
+  };
+
+  const handleDeselectAll = () => {
+    deselectAll();
+  };
+
+  // T150: Retry All with confirmation modal
+  const handleRetryAllClick = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmRetryAll = () => {
+    const selectedDocumentIds = Array.from(selectedIds);
+    batchRetryMutation.mutate(selectedDocumentIds, {
+      onSuccess: () => {
+        setShowConfirmModal(false);
+        // T151: Clear selection after successful batch operation
+        deselectAll();
+      },
+    });
+  };
+
+  // T151: Clear Selection action
+  const handleClearSelection = () => {
+    deselectAll();
+  };
+
+  // Convert Set to Array for DocumentList
   const selectedDocumentIds = Array.from(selectedIds);
 
   return (
@@ -111,7 +149,7 @@ export function DocumentsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         <div className="space-y-8">
           {/* Upload Zone Section */}
           <section>
@@ -140,23 +178,32 @@ export function DocumentsPage() {
               onDocumentRetry={handleDocumentRetry}
               onSelectAll={handleSelectAll}
               onDeselectAll={handleDeselectAll}
+              showBatchActions={true}
             />
           </section>
         </div>
       </main>
 
-      {/* Document Detail Panel */}
-      <DocumentDetailPanel
-        documentId={detailPanelDocumentId}
-        isOpen={!!detailPanelDocumentId}
-        onClose={closeDetailPanel}
-      />
-      {/* Batch Action Bar */}
+      {/* T152: Integrate BatchActionBar with conditional visibility */}
       <BatchActionBar
         selectedCount={selectedCount}
-        onRetryAll={handleBatchRetry}
-        onClearSelection={clearSelection}
+        visible={selectedCount > 0}
+        onRetryAll={handleRetryAllClick}
+        onClearSelection={handleClearSelection}
         isRetrying={batchRetryMutation.isPending}
+      />
+
+      {/* T150: Confirmation modal for batch retry */}
+      <Modal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmRetryAll}
+        title="Retry Selected Documents"
+        description={`Are you sure you want to retry classification for ${selectedCount} selected document${selectedCount === 1 ? '' : 's'}? This will re-run the classification process.`}
+        confirmText="Retry All"
+        cancelText="Cancel"
+        confirmVariant="primary"
+        isConfirming={batchRetryMutation.isPending}
       />
     </div>
   );

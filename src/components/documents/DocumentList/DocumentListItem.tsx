@@ -20,6 +20,7 @@ export interface DocumentListItemProps {
   onRetry?: (id: string) => void;
   searchQuery?: string;
   className?: string;
+  showCheckbox?: boolean;
 }
 
 export function DocumentListItem({
@@ -30,19 +31,25 @@ export function DocumentListItem({
   onRetry,
   searchQuery,
   className,
+  showCheckbox = false,
 }: DocumentListItemProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const isFailed = document.status === 2; // DocumentStatus.Failed
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
       className={clsx(
-        'border border-neutral-200 rounded-lg p-4 transition-all duration-150 group',
-        'hover:shadow-md hover:border-primary-300 hover:bg-neutral-50',
-        isSelected && 'ring-2 ring-primary-500 border-primary-500 bg-primary-50',
+        'border border-neutral-200 rounded-lg p-4 transition-all duration-150',
+        'hover:shadow-md hover:border-primary-300',
+        // T145: Add light gray background on hover
+        isHovered && 'bg-neutral-50',
+        isSelected && 'ring-2 ring-primary-500 border-primary-500',
         onClick && 'cursor-pointer',
         className
       )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick?.(document.id)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -57,21 +64,23 @@ export function DocumentListItem({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3 flex-1 min-w-0">
-          {onSelect && (
+          {/* T144: Show checkbox on hover with fade-in animation */}
+          {showCheckbox && onSelect && (
             <div
               className={clsx(
-                'transition-opacity duration-200',
+                'transition-opacity duration-150 ease-in-out',
                 isHovered || isSelected ? 'opacity-100' : 'opacity-0'
               )}
             >
               <Checkbox
                 checked={isSelected}
                 onChange={() => onSelect(document.id)}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 aria-label={`Select ${document.fileName}`}
               />
             </div>
           )}
+          
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold text-neutral-900 truncate">
               <HighlightedText text={document.fileName} query={searchQuery} />

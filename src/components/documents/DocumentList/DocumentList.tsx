@@ -17,8 +17,7 @@ export interface DocumentListProps {
   onDocumentRetry?: (id: string) => void;
   onSelectAll?: () => void;
   onDeselectAll?: () => void;
-  totalCount?: number;
-  searchQuery?: string;
+  showBatchActions?: boolean;
   className?: string;
 }
 
@@ -31,14 +30,14 @@ export function DocumentList({
   onDocumentRetry,
   onSelectAll,
   onDeselectAll,
-  totalCount,
-  searchQuery,
+  showBatchActions = false,
   className,
 }: DocumentListProps) {
+  // Calculate selection state for header checkbox
   const allSelected = documents.length > 0 && selectedDocumentIds.length === documents.length;
-  const someSelected = selectedDocumentIds.length > 0 && !allSelected;
+  const someSelected = selectedDocumentIds.length > 0 && selectedDocumentIds.length < documents.length;
 
-  const handleSelectAllChange = () => {
+  const handleHeaderCheckboxChange = () => {
     if (allSelected) {
       onDeselectAll?.();
     } else {
@@ -107,44 +106,37 @@ export function DocumentList({
 
   return (
     <div className={className}>
-      {/* Header with Select All checkbox */}
-      {onDocumentSelect && documents.length > 0 && (
-        <div className="mb-4 pb-3 border-b border-neutral-200">
-          <div className="flex items-center justify-between">
-            <Checkbox
-              checked={allSelected}
-              indeterminate={someSelected}
-              onChange={handleSelectAllChange}
-              label={
-                allSelected
-                  ? `All ${documents.length} selected`
-                  : someSelected
-                  ? `${selectedDocumentIds.length} of ${documents.length} selected`
-                  : `Select all ${documents.length} documents`
-              }
-              className="text-sm"
-            />
-            {selectedDocumentIds.length > 0 && (
-              <span className="text-xs text-neutral-500">
-                {selectedDocumentIds.length} document{selectedDocumentIds.length !== 1 ? 's' : ''} selected
-              </span>
-            )}
-          </div>
+      {/* T148: Select All / Deselect All Header */}
+      {showBatchActions && onSelectAll && onDeselectAll && (
+        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-neutral-200">
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected}
+            onChange={handleHeaderCheckboxChange}
+            label={
+              allSelected
+                ? 'Deselect all'
+                : someSelected
+                ? `${selectedDocumentIds.length} selected`
+                : 'Select all'
+            }
+            aria-label="Select all documents"
+          />
         </div>
       )}
-      
-      {/* Document list */}
+
       <div className="space-y-3" role="list">
-      {documents.map((document) => (
-        <DocumentListItem
-          key={document.id}
-          document={document}
-          isSelected={selectedDocumentIds.includes(document.id)}
-          onSelect={onDocumentSelect}
-          onClick={onDocumentClick}
-          onRetry={onDocumentRetry}
-        />
-      ))}
+        {documents.map((document) => (
+          <DocumentListItem
+            key={document.id}
+            document={document}
+            isSelected={selectedDocumentIds.includes(document.id)}
+            onSelect={onDocumentSelect}
+            onClick={onDocumentClick}
+            onRetry={onDocumentRetry}
+            showCheckbox={showBatchActions}
+          />
+        ))}
       </div>
     </div>
   );

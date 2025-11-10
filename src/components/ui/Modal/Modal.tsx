@@ -1,148 +1,124 @@
 /**
- * Modal component using Radix Dialog primitive
- * Provides accessible modal dialogs with backdrop and animations
+ * Simple Modal/Dialog component for confirmations
+ * Basic implementation for batch operations
  */
 
-import * as Dialog from '@radix-ui/react-dialog';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ReactNode } from 'react';
-import clsx from 'clsx';
+import { useEffect, type ReactNode } from 'react';
+import { Button } from '@/components/ui/Button';
+import { clsx } from 'clsx';
 
 export interface ModalProps {
-  /** Whether the modal is open */
-  open: boolean;
-  /** Callback when modal should close */
-  onOpenChange: (open: boolean) => void;
-  /** Modal title */
-  title?: string;
-  /** Modal description */
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm?: () => void;
+  title: string;
   description?: string;
-  /** Modal content */
-  children: ReactNode;
-  /** Custom class name for content */
-  className?: string;
-  /** Size of the modal */
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  /** Whether to show close button */
-  showCloseButton?: boolean;
-  /** Whether clicking outside closes the modal */
-  closeOnOutsideClick?: boolean;
+  children?: ReactNode;
+  confirmText?: string;
+  cancelText?: string;
+  confirmVariant?: 'primary' | 'destructive';
+  isConfirming?: boolean;
 }
 
-const sizeClasses = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-xl',
-  full: 'max-w-full',
-};
-
 export function Modal({
-  open,
-  onOpenChange,
+  isOpen,
+  onClose,
+  onConfirm,
   title,
   description,
   children,
-  className,
-  size = 'md',
-  showCloseButton = true,
-  closeOnOutsideClick = true,
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
+  confirmVariant = 'primary',
+  isConfirming = false,
 }: ModalProps) {
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen && !isConfirming) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, isConfirming, onClose]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <AnimatePresence>
-        {open && (
-          <Dialog.Portal forceMount>
-            {/* Backdrop */}
-            <Dialog.Overlay asChild>
-              <motion.div
-                className="fixed inset-0 bg-black/50 z-40"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              />
-            </Dialog.Overlay>
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-neutral-900 bg-opacity-50 transition-opacity animate-fade-in"
+        onClick={!isConfirming ? onClose : undefined}
+        aria-hidden="true"
+      />
 
-            {/* Content */}
-            <Dialog.Content
-              asChild
-              onPointerDownOutside={(e) => {
-                if (!closeOnOutsideClick) {
-                  e.preventDefault();
-                }
-              }}
-              onEscapeKeyDown={(e) => {
-                if (!closeOnOutsideClick) {
-                  e.preventDefault();
-                }
-              }}
+      {/* Modal content */}
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div
+          className={clsx(
+            'relative bg-white rounded-lg shadow-xl max-w-md w-full',
+            'transform transition-all animate-fade-in'
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="px-6 pt-6 pb-4">
+            <h3
+              id="modal-title"
+              className="text-lg font-semibold text-neutral-900"
             >
-              <motion.div
-                className={clsx(
-                  'fixed left-1/2 top-1/2 z-50',
-                  'w-full',
-                  sizeClasses[size],
-                  'bg-white rounded-lg shadow-xl',
-                  'p-6',
-                  'focus:outline-none',
-                  className
-                )}
-                initial={{ opacity: 0, scale: 0.95, x: '-50%', y: '-50%' }}
-                animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
-                exit={{ opacity: 0, scale: 0.95, x: '-50%', y: '-50%' }}
-                transition={{ duration: 0.2 }}
-              >
-                {/* Header */}
-                {(title || showCloseButton) && (
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      {title && (
-                        <Dialog.Title className="text-lg font-semibold text-gray-900">
-                          {title}
-                        </Dialog.Title>
-                      )}
-                      {description && (
-                        <Dialog.Description className="mt-1 text-sm text-gray-500">
-                          {description}
-                        </Dialog.Description>
-                      )}
-                    </div>
-                    {showCloseButton && (
-                      <Dialog.Close
-                        className={clsx(
-                          'ml-4 text-gray-400 hover:text-gray-600',
-                          'rounded-md p-1 transition-colors',
-                          'focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        )}
-                        aria-label="Close"
-                      >
-                        <svg
-                          className="w-5 h-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Dialog.Close>
-                    )}
-                  </div>
-                )}
+              {title}
+            </h3>
+            {description && (
+              <p className="mt-2 text-sm text-neutral-600">{description}</p>
+            )}
+          </div>
 
-                {/* Body */}
-                <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
-                  {children}
-                </div>
-              </motion.div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        )}
-      </AnimatePresence>
-    </Dialog.Root>
+          {/* Body */}
+          {children && <div className="px-6 pb-4">{children}</div>}
+
+          {/* Footer */}
+          <div className="px-6 pb-6 flex items-center justify-end gap-3">
+            <Button
+              variant="ghost"
+              onClick={onClose}
+              disabled={isConfirming}
+            >
+              {cancelText}
+            </Button>
+            {onConfirm && (
+              <Button
+                variant={confirmVariant}
+                onClick={onConfirm}
+                isLoading={isConfirming}
+                disabled={isConfirming}
+              >
+                {confirmText}
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

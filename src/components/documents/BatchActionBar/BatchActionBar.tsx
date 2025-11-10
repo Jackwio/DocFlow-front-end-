@@ -1,145 +1,117 @@
 /**
  * BatchActionBar component
- * Floating action bar for batch operations on selected documents
+ * Floating action bar that appears when documents are selected
+ * Provides batch operations like retry all and clear selection
  */
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { clsx } from 'clsx';
 
 export interface BatchActionBarProps {
-  /**
-   * Number of selected documents
-   */
   selectedCount: number;
-  
-  /**
-   * Called when user clicks "Retry All"
-   */
+  visible: boolean;
   onRetryAll?: () => void;
-  
-  /**
-   * Called when user clicks "Clear Selection"
-   */
-  onClearSelection?: () => void;
-  
-  /**
-   * Whether retry operation is in progress
-   */
+  onClearSelection: () => void;
   isRetrying?: boolean;
-  
-  /**
-   * Additional CSS classes
-   */
   className?: string;
 }
 
 export function BatchActionBar({
   selectedCount,
+  visible,
   onRetryAll,
   onClearSelection,
   isRetrying = false,
   className,
 }: BatchActionBarProps) {
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
-  const handleRetryClick = () => {
-    if (!showConfirmation) {
-      setShowConfirmation(true);
-      // Auto-hide confirmation after 5 seconds
-      setTimeout(() => setShowConfirmation(false), 5000);
-    } else {
-      setShowConfirmation(false);
-      onRetryAll?.();
-    }
-  };
-
-  const handleClearSelection = () => {
-    setShowConfirmation(false);
-    onClearSelection?.();
-  };
-
-  if (selectedCount === 0) {
-    return null;
-  }
-
   return (
     <div
       className={clsx(
         'fixed bottom-0 left-0 right-0 z-50',
-        'transform transition-all duration-300 ease-out',
-        'animate-[slideUp_0.3s_ease-out]',
+        'bg-white border-t border-neutral-200 shadow-lg',
+        'transition-all duration-300 ease-out',
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0',
         className
       )}
+      role="toolbar"
+      aria-label="Batch actions toolbar"
+      aria-hidden={!visible}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-        <div
-          className={clsx(
-            'bg-white rounded-lg shadow-2xl border border-neutral-200',
-            'px-6 py-4',
-            'flex items-center justify-between gap-4'
-          )}
-        >
-          {/* Selection count */}
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4">
+          {/* Selection Count */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-700 font-semibold text-sm">
-              {selectedCount}
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
+                <span className="text-sm font-semibold text-primary-700">
+                  {selectedCount}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-neutral-700">
+                {selectedCount === 1
+                  ? '1 document selected'
+                  : `${selectedCount} documents selected`}
+              </span>
             </div>
-            <span className="text-sm font-medium text-neutral-700">
-              {selectedCount === 1 ? '1 document' : `${selectedCount} documents`} selected
-            </span>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
-            {showConfirmation ? (
-              <>
-                <span className="text-sm text-neutral-600 mr-2">
-                  Confirm retry for {selectedCount} document{selectedCount !== 1 ? 's' : ''}?
-                </span>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={handleRetryClick}
-                  disabled={isRetrying}
-                  className="min-w-[100px]"
-                >
-                  {isRetrying ? 'Retrying...' : 'Confirm'}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setShowConfirmation(false)}
-                  disabled={isRetrying}
-                >
-                  Cancel
-                </Button>
-              </>
-            ) : (
-              <>
-                {onRetryAll && (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={handleRetryClick}
-                    disabled={isRetrying}
-                    className="min-w-[100px]"
-                  >
-                    {isRetrying ? 'Retrying...' : 'Retry All'}
-                  </Button>
-                )}
-                {onClearSelection && (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleClearSelection}
-                    disabled={isRetrying}
-                  >
-                    Clear Selection
-                  </Button>
-                )}
-              </>
+          <div className="flex items-center gap-2">
+            {onRetryAll && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={onRetryAll}
+                isLoading={isRetrying}
+                disabled={isRetrying}
+                leftIcon={
+                  !isRetrying && (
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  )
+                }
+              >
+                Retry All
+              </Button>
             )}
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClearSelection}
+              disabled={isRetrying}
+              leftIcon={
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              }
+              aria-label="Clear selection"
+            >
+              Clear
+            </Button>
           </div>
         </div>
       </div>
