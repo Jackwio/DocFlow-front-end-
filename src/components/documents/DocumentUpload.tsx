@@ -54,10 +54,10 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ onUpload, onClose }) =>
 
   return (
     <div className="upload-modal-overlay" onClick={onClose}>
-      <div className="upload-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-dialog-title" onClick={(e) => e.stopPropagation()}>
         <div className="upload-header">
-          <h2>Upload Document</h2>
-          <button className="close-button" onClick={onClose}>✕</button>
+          <h2 id="upload-dialog-title">Upload Document</h2>
+          <button className="close-button" onClick={onClose} aria-label="Close upload dialog">✕</button>
         </div>
         
         <div
