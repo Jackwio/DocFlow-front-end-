@@ -6,21 +6,34 @@
 import { useState } from 'react';
 import { UploadZone } from '@/components/documents/UploadZone';
 import { DocumentList } from '@/components/documents/DocumentList';
+import { BatchActionBar } from '@/components/documents/BatchActionBar';
+import { Modal } from '@/components/ui/Modal';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useDocuments } from '@/hooks/useDocuments';
+import { useDocumentSelection } from '@/hooks/useDocumentSelection';
 import { useRetryClassification } from '@/hooks/useRetryClassification';
+import { useBatchRetry } from '@/hooks/useBatchRetry';
 import { useUIStore } from '@/state/useUIStore';
 
 export function DocumentsPage() {
-  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { documents, isLoading, totalCount } = useDocuments();
   const retryMutation = useRetryClassification();
+  const batchRetryMutation = useBatchRetry();
   const openDetailPanel = useUIStore((state) => state.openDetailPanel);
+  
+  // T143: Use document selection hook
+  const {
+    selectedIds,
+    isSelected,
+    toggleSelection,
+    selectAll,
+    deselectAll,
+    selectedCount,
+  } = useDocumentSelection();
 
   const handleDocumentSelect = (id: string) => {
-    setSelectedDocumentIds((prev) =>
-      prev.includes(id) ? prev.filter((docId) => docId !== id) : [...prev, id]
-    );
+    toggleSelection(id);
   };
 
   const handleDocumentClick = (id: string) => {
@@ -30,6 +43,39 @@ export function DocumentsPage() {
   const handleDocumentRetry = (id: string) => {
     retryMutation.mutate(id);
   };
+
+  // T148: Select all / deselect all
+  const handleSelectAll = () => {
+    selectAll(documents.map((doc) => doc.id));
+  };
+
+  const handleDeselectAll = () => {
+    deselectAll();
+  };
+
+  // T150: Retry All with confirmation modal
+  const handleRetryAllClick = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmRetryAll = () => {
+    const selectedDocumentIds = Array.from(selectedIds);
+    batchRetryMutation.mutate(selectedDocumentIds, {
+      onSuccess: () => {
+        setShowConfirmModal(false);
+        // T151: Clear selection after successful batch operation
+        deselectAll();
+      },
+    });
+  };
+
+  // T151: Clear Selection action
+  const handleClearSelection = () => {
+    deselectAll();
+  };
+
+  // Convert Set to Array for DocumentList
+  const selectedDocumentIds = Array.from(selectedIds);
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -48,7 +94,7 @@ export function DocumentsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         <div className="space-y-8">
           {/* Upload Zone Section */}
           <section>
@@ -67,14 +113,6 @@ export function DocumentsPage() {
                   </span>
                 )}
               </h2>
-              {selectedDocumentIds.length > 0 && (
-                <button
-                  onClick={() => setSelectedDocumentIds([])}
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 rounded px-2 py-1"
-                >
-                  Clear selection ({selectedDocumentIds.length})
-                </button>
-              )}
             </div>
             <DocumentList
               documents={documents}
@@ -83,10 +121,35 @@ export function DocumentsPage() {
               onDocumentSelect={handleDocumentSelect}
               onDocumentClick={handleDocumentClick}
               onDocumentRetry={handleDocumentRetry}
+              onSelectAll={handleSelectAll}
+              onDeselectAll={handleDeselectAll}
+              showBatchActions={true}
             />
           </section>
         </div>
       </main>
+
+      {/* T152: Integrate BatchActionBar with conditional visibility */}
+      <BatchActionBar
+        selectedCount={selectedCount}
+        visible={selectedCount > 0}
+        onRetryAll={handleRetryAllClick}
+        onClearSelection={handleClearSelection}
+        isRetrying={batchRetryMutation.isPending}
+      />
+
+      {/* T150: Confirmation modal for batch retry */}
+      <Modal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmRetryAll}
+        title="Retry Selected Documents"
+        description={`Are you sure you want to retry classification for ${selectedCount} selected document${selectedCount === 1 ? '' : 's'}? This will re-run the classification process.`}
+        confirmText="Retry All"
+        cancelText="Cancel"
+        confirmVariant="primary"
+        isConfirming={batchRetryMutation.isPending}
+      />
     </div>
   );
 }
