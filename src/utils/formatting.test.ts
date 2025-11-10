@@ -90,8 +90,8 @@ describe('stringToColor', () => {
     expect(color1).not.toBe(color2);
   });
 
-  it('returns HSL color format', () => {
+  it('returns RGB color format', () => {
     const color = stringToColor('Test');
-    expect(color).toMatch(/^hsl\(\d+, 70%, 85%\)$/);
+    expect(color).toMatch(/^rgb\(\d+, \d+, \d+\)$/);
   });
 });

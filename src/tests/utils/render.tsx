@@ -4,6 +4,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, RenderOptions } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ReactElement } from 'react';
 
 /**
@@ -28,6 +29,7 @@ function createTestQueryClient() {
  */
 export function renderWithProviders(ui: ReactElement, options?: RenderOptions) {
   const queryClient = createTestQueryClient();
+  const user = userEvent.setup();
 
   function Wrapper({ children }: { children: React.ReactNode }) {
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
@@ -36,6 +38,7 @@ export function renderWithProviders(ui: ReactElement, options?: RenderOptions) {
   return {
     ...render(ui, { wrapper: Wrapper, ...options }),
     queryClient,
+    user,
   };
 }
 

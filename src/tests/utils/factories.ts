@@ -4,7 +4,13 @@
 
 import { createMockDocument } from '../mocks/data';
 
-import type { DocumentDto, DocumentListDto, TagDto, ClassificationResultDto } from '@/types';
+import type {
+  DocumentDto,
+  DocumentListDto,
+  TagDto,
+  ClassificationResultDto,
+  TagSource,
+} from '@/types';
 
 /**
  * Create test document DTO
@@ -39,6 +45,18 @@ export function buildTag(overrides?: Partial<TagDto>): TagDto {
     source: 0,
     addedAt: new Date().toISOString(),
     ...overrides,
+  };
+}
+
+/**
+ * Create mock tag with specified name and source
+ */
+export function createMockTag(name: string, source: TagSource = 0): TagDto {
+  return {
+    name,
+    source,
+    addedAt: new Date().toISOString(),
+    addedBy: source === TagSource.Manual ? 'user@example.com' : undefined,
   };
 }
 

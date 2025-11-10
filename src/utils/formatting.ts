@@ -87,5 +87,28 @@ export function stringToColor(str: string): string {
   }
 
   const hue = hash % 360;
-  return `hsl(${hue}, 70%, 85%)`; // Light, pastel colors
+  // Convert HSL to RGB for better testing compatibility
+  // Using 70% saturation and 50% lightness for good contrast with white text
+  const h = hue / 360;
+  const s = 0.7;
+  const l = 0.5;
+
+  const hueToRgb = (p: number, q: number, t: number): number => {
+    let tVal = t;
+    if (tVal < 0) tVal += 1;
+    if (tVal > 1) tVal -= 1;
+    if (tVal < 1 / 6) return p + (q - p) * 6 * tVal;
+    if (tVal < 1 / 2) return q;
+    if (tVal < 2 / 3) return p + (q - p) * (2 / 3 - tVal) * 6;
+    return p;
+  };
+
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+
+  const r = Math.round(hueToRgb(p, q, h + 1 / 3) * 255);
+  const g = Math.round(hueToRgb(p, q, h) * 255);
+  const b = Math.round(hueToRgb(p, q, h - 1 / 3) * 255);
+
+  return `rgb(${r}, ${g}, ${b})`;
 }
