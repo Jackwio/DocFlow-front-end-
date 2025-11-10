@@ -16,3 +16,9 @@
   background-color: #ffffff;
   min-height: calc(100vh - 60px);
 }
+
+/* If header nav accidentally renders inside page content (duplicate), hide those links
+   so the main header nav remains visible in the top bar only. */
+.layout-content .nav-link {
+  display: none;
+}

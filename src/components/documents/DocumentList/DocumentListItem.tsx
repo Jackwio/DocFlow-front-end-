@@ -35,7 +35,6 @@ export function DocumentListItem({
 }: DocumentListItemProps) {
   const [isHovered, setIsHovered] = useState(false);
   const isFailed = document.status === 2; // DocumentStatus.Failed
-  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
@@ -48,11 +47,7 @@ export function DocumentListItem({
         onClick && 'cursor-pointer',
         className
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick?.(document.id)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {

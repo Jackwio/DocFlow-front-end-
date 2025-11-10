@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { DocumentList } from '../components/documents/DocumentList';
+import DocumentCard from '../components/documents/DocumentCard';
 import DocumentUpload from '../components/documents/DocumentUpload';
 import { DocumentsApiService } from '../services/api/documents';
 import { DocumentListDto, DocumentStatus } from '../types/document';
-import { formatFileSize } from '../utils/formatting';
+import { formatFileSize, formatDate } from '../utils/formatting';
 import './Documents.css';
 
 // Map API status to UI status
@@ -37,15 +37,17 @@ const Documents: React.FC = () => {
         maxResultCount: 100,
       });
 
-      // Transform API documents to UI format
+      // Transform API documents to the UI DTO shape expected by the
+      // DocumentList and DocumentListItem components. Keep `status` as the
+      // numeric `DocumentStatus` enum value (don't convert to strings).
       const transformedDocs = result.items.map((doc: DocumentListDto) => ({
         id: doc.id,
-        name: doc.fileName,
-        type: doc.fileName.split('.').pop() || 'unknown',
-        size: formatFileSize(doc.fileSize),
-        uploadedBy: 'System User', // API doesn't provide this yet
-        uploadedAt: new Date(doc.uploadedAt).toLocaleDateString(),
-        status: mapStatus(doc.status),
+        fileName: doc.fileName,
+        fileSize: doc.fileSize,
+        uploadedAt: doc.uploadedAt,
+        classifiedAt: doc.classifiedAt,
+        tags: doc.tags || [],
+        status: doc.status,
       }));
 
       setDocuments(transformedDocs);
@@ -76,8 +78,10 @@ const Documents: React.FC = () => {
   };
 
   const filteredDocuments = documents.filter((doc) => {
-    const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = !filterType || doc.type.toLowerCase() === filterType.toLowerCase();
+    const fileName = (doc.fileName || '').toString();
+    const matchesSearch = !searchTerm || fileName.toLowerCase().includes(searchTerm.toLowerCase());
+    const docType = (fileName.split('.').pop() || 'unknown').toString();
+    const matchesType = !filterType || docType.toLowerCase() === filterType.toLowerCase();
     return matchesSearch && matchesType;
   });
 
@@ -128,8 +132,21 @@ const Documents: React.FC = () => {
             Loading documents...
           </div>
         ) : (
-          <DocumentList documents={filteredDocuments} />
-        )}
+            <div className="grid gap-4">
+              {filteredDocuments.map((doc) => (
+                <DocumentCard
+                  key={doc.id}
+                  id={doc.id}
+                  name={doc.fileName}
+                  type={(doc.fileName || '').split('.').pop() || 'unknown'}
+                  size={formatFileSize(doc.fileSize)}
+                  uploadedBy={'System User'}
+                  uploadedAt={formatDate(doc.uploadedAt, 'relative')}
+                  status={mapStatus(doc.status)}
+                />
+              ))}
+            </div>
+          )}
       </div>
 
       {showUpload && (
