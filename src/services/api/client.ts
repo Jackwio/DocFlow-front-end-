@@ -77,7 +77,7 @@ export function createApiClient(config: ApiClientConfig): AxiosInstance {
  * Get API base URL from environment
  */
 export function getApiBaseUrl(): string {
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+  return import.meta.env.VITE_API_BASE_URL || 'https://localhost:44347';
 }
 
 /**

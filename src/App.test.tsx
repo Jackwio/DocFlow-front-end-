@@ -9,13 +9,16 @@ import App from './App';
 describe('App', () => {
   it('renders DocFlow header', () => {
     render(<App />);
-    const heading = screen.getByRole('heading', { name: 'DocFlow', level: 1 });
+    const heading = screen.getByRole('heading', {
+      name: /DocFlow - Document Intake & Classification/i,
+      level: 1,
+    });
     expect(heading).toBeInTheDocument();
   });
 
-  it('renders welcome message', () => {
+  it('renders upload zone', () => {
     render(<App />);
-    const message = screen.getByText(/Welcome to DocFlow/i);
-    expect(message).toBeInTheDocument();
+    const uploadButton = screen.getByRole('button', { name: /Browse Files/i });
+    expect(uploadButton).toBeInTheDocument();
   });
 });

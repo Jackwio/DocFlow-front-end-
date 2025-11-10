@@ -32,7 +32,10 @@ export type DateFormat = 'short' | 'long' | 'relative';
  * Format ISO date string to human-readable format
  */
 export function formatDate(isoString: string, formatType: DateFormat = 'short'): string {
+  if (!isoString) return '';
+
   const date = new Date(isoString);
+  if (isNaN(date.getTime())) return '';
 
   switch (formatType) {
     case 'short':
@@ -50,7 +53,11 @@ export function formatDate(isoString: string, formatType: DateFormat = 'short'):
  * Format date for relative display (e.g., "2 hours ago", "yesterday")
  */
 export function formatRelativeDate(isoString: string): string {
+  if (!isoString) return '';
+
   const date = new Date(isoString);
+  if (isNaN(date.getTime())) return '';
+
   return formatRelative(date, new Date());
 }
 

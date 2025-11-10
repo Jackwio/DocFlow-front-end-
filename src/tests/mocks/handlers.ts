@@ -3,10 +3,10 @@
  */
 
 import { http, HttpResponse } from 'msw';
-import { mockDocuments, mockDocumentDto, createMockDocument } from './data';
+import { mockDocuments, createMockDocument } from './data';
 import type { DocumentDto, DocumentListDto, PagedResultDto } from '@/types';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://localhost:44347';
 
 export const handlers = [
   // Upload single document
@@ -24,8 +24,11 @@ export const handlers = [
   // Get single document
   http.get(`${API_BASE_URL}/api/documents/:id`, ({ params }) => {
     const { id } = params;
-    const doc = mockDocuments.find((d) => d.id === id) || mockDocumentDto;
-    return HttpResponse.json<DocumentDto>(doc, { status: 200 });
+    const doc = mockDocuments.find((d) => d.id === id) as DocumentDto | undefined;
+    if (doc) {
+      return HttpResponse.json<DocumentDto>(doc, { status: 200 });
+    }
+    return new HttpResponse(null, { status: 404 });
   }),
 
   // Get document list
@@ -55,15 +58,22 @@ export const handlers = [
   // Retry classification
   http.post(`${API_BASE_URL}/api/documents/:id/retry`, ({ params }) => {
     const { id } = params;
-    const doc = mockDocuments.find((d) => d.id === id) || mockDocumentDto;
-    return HttpResponse.json<DocumentDto>({ ...doc, status: 0 }, { status: 200 });
+    const doc = mockDocuments.find((d) => d.id === id) as DocumentDto | undefined;
+    if (doc) {
+      return HttpResponse.json<DocumentDto>({ ...doc, status: 0 }, { status: 200 });
+    }
+    return new HttpResponse(null, { status: 404 });
   }),
 
   // Add manual tag
   http.post(`${API_BASE_URL}/api/documents/:id/tags`, async ({ params, request }) => {
     const { id } = params;
     const body = (await request.json()) as { tagName: string };
-    const doc = mockDocuments.find((d) => d.id === id) || mockDocumentDto;
+    const doc = mockDocuments.find((d) => d.id === id) as DocumentDto | undefined;
+    
+    if (!doc) {
+      return new HttpResponse(null, { status: 404 });
+    }
 
     return HttpResponse.json<DocumentDto>(
       {
@@ -90,7 +100,10 @@ export const handlers = [
   // Get classification history
   http.get(`${API_BASE_URL}/api/documents/:id/history`, ({ params }) => {
     const { id } = params;
-    const doc = mockDocuments.find((d) => d.id === id) || mockDocumentDto;
-    return HttpResponse.json<DocumentDto>(doc, { status: 200 });
+    const doc = mockDocuments.find((d) => d.id === id) as DocumentDto | undefined;
+    if (doc) {
+      return HttpResponse.json<DocumentDto>(doc, { status: 200 });
+    }
+    return new HttpResponse(null, { status: 404 });
   }),
 ];

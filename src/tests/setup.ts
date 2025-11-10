@@ -4,13 +4,18 @@
 
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import { afterEach, beforeAll, afterAll } from 'vitest';
+import { server } from './mocks/server';
 
-// Cleanup after each test
+// Start MSW server before all tests
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+
+// Reset handlers after each test
 afterEach(() => {
+  server.resetHandlers();
   cleanup();
 });
 
-// Mock environment variables
-import.meta.env.VITE_API_BASE_URL = 'http://localhost:3000';
-import.meta.env.VITE_MOCK_API = 'true';
+// Clean up after all tests
+afterAll(() => server.close());
+

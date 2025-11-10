@@ -99,37 +99,37 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T052 [P] [US1] Unit test for UploadZone component: render empty state, drag-over highlighting in tests/unit/components/documents/UploadZone.test.tsx
-- [ ] T053 [P] [US1] Unit test for UploadZone: file selection via browse, file validation (size, type) in tests/unit/components/documents/UploadZone.test.tsx
-- [ ] T054 [P] [US1] Unit test for useFileUpload hook: upload progress tracking, error handling in tests/unit/hooks/useFileUpload.test.ts
-- [ ] T055 [P] [US1] Unit test for StatusBadge component: render all status variants (Pending, Classified, Failed, Routed) in tests/unit/components/ui/Badge/StatusBadge.test.tsx
-- [ ] T056 [P] [US1] Unit test for ProgressBar component: visual progress percentage, accessibility attributes in tests/unit/components/ui/ProgressBar/ProgressBar.test.tsx
-- [ ] T057 [US1] Integration test: upload flow (select file → upload → appears in list) in tests/integration/upload-flow.test.tsx
+- [x] T052 [P] [US1] Unit test for UploadZone component: render empty state, drag-over highlighting in tests/unit/components/documents/UploadZone.test.tsx
+- [x] T053 [P] [US1] Unit test for UploadZone: file selection via browse, file validation (size, type) in tests/unit/components/documents/UploadZone.test.tsx
+- [x] T054 [P] [US1] Unit test for useFileUpload hook: upload progress tracking, error handling in tests/unit/hooks/useFileUpload.test.ts
+- [x] T055 [P] [US1] Unit test for StatusBadge component: render all status variants (Pending, Classified, Failed, Routed) in tests/unit/components/ui/Badge/StatusBadge.test.tsx
+- [x] T056 [P] [US1] Unit test for ProgressBar component: visual progress percentage, accessibility attributes in tests/unit/components/ui/ProgressBar/ProgressBar.test.tsx
+- [x] T057 [US1] Integration test: upload flow (select file → upload → appears in list) in tests/integration/upload-flow.test.tsx
 
 ### Implementation for User Story 1
 
-- [ ] T058 [P] [US1] Create src/components/ui/Button/Button.tsx with variants (primary, secondary, destructive), loading state, accessibility
-- [ ] T059 [P] [US1] Create src/components/ui/Button/index.ts barrel export
-- [ ] T060 [P] [US1] Create src/components/ui/Badge/StatusBadge.tsx with color-coded badges for DocumentStatus enum
-- [ ] T061 [P] [US1] Create src/components/ui/Badge/index.ts barrel export
-- [ ] T062 [P] [US1] Create src/components/ui/ProgressBar/ProgressBar.tsx with percentage display and ARIA attributes
-- [ ] T063 [P] [US1] Create src/components/ui/ProgressBar/index.ts barrel export
-- [ ] T064 [P] [US1] Create src/components/ui/Toast/Toast.tsx for success/error notifications with auto-dismiss
-- [ ] T065 [P] [US1] Create src/components/ui/Toast/ToastContainer.tsx to manage notification queue
-- [ ] T066 [P] [US1] Create src/components/ui/Toast/index.ts barrel export
-- [ ] T067 [US1] Create src/hooks/useDocumentUpload.ts TanStack Query mutation for uploadDocument with onUploadProgress
-- [ ] T068 [US1] Create src/components/documents/UploadZone/useFileUpload.ts hook for drag-and-drop, file validation, progress tracking
-- [ ] T069 [US1] Create src/components/documents/UploadZone/UploadZone.tsx with drag-and-drop zone, visual feedback (FR-001, FR-004)
-- [ ] T070 [US1] Create src/components/documents/UploadZone/UploadProgressItem.tsx showing individual file upload progress (FR-002)
-- [ ] T071 [US1] Create src/components/documents/UploadZone/index.ts barrel export
-- [ ] T072 [US1] Create src/components/documents/DocumentList/DocumentList.tsx list container with loading and empty states
-- [ ] T073 [US1] Create src/components/documents/DocumentList/DocumentListItem.tsx showing fileName, fileSize, status badge, uploadedAt
-- [ ] T074 [US1] Create src/components/documents/DocumentList/index.ts barrel export
-- [ ] T075 [US1] Create src/hooks/useDocuments.ts TanStack Query hook for fetching document list with polling for Pending status
-- [ ] T076 [US1] Create src/pages/DocumentsPage.tsx integrating UploadZone and DocumentList components
-- [ ] T077 [US1] Add error handling to useDocumentUpload: display error toast, show retry button (FR-001 scenario 3)
-- [ ] T078 [US1] Add success notification to upload completion with auto-dismiss (FR-001 scenario 4)
-- [ ] T079 [US1] Add batch upload support in UploadZone for multiple file selection (FR-003, FR-001 scenario 2)
+- [x] T058 [P] [US1] Create src/components/ui/Button/Button.tsx with variants (primary, secondary, destructive), loading state, accessibility
+- [x] T059 [P] [US1] Create src/components/ui/Button/index.ts barrel export
+- [x] T060 [P] [US1] Create src/components/ui/Badge/StatusBadge.tsx with color-coded badges for DocumentStatus enum
+- [x] T061 [P] [US1] Create src/components/ui/Badge/index.ts barrel export
+- [x] T062 [P] [US1] Create src/components/ui/ProgressBar/ProgressBar.tsx with percentage display and ARIA attributes
+- [x] T063 [P] [US1] Create src/components/ui/ProgressBar/index.ts barrel export
+- [x] T064 [P] [US1] Create src/components/ui/Toast/Toast.tsx for success/error notifications with auto-dismiss
+- [x] T065 [P] [US1] Create src/components/ui/Toast/ToastContainer.tsx to manage notification queue
+- [x] T066 [P] [US1] Create src/components/ui/Toast/index.ts barrel export
+- [x] T067 [US1] Create src/hooks/useDocumentUpload.ts TanStack Query mutation for uploadDocument with onUploadProgress
+- [x] T068 [US1] Create src/components/documents/UploadZone/useFileUpload.ts hook for drag-and-drop, file validation, progress tracking
+- [x] T069 [US1] Create src/components/documents/UploadZone/UploadZone.tsx with drag-and-drop zone, visual feedback (FR-001, FR-004)
+- [x] T070 [US1] Create src/components/documents/UploadZone/UploadProgressItem.tsx showing individual file upload progress (FR-002)
+- [x] T071 [US1] Create src/components/documents/UploadZone/index.ts barrel export
+- [x] T072 [US1] Create src/components/documents/DocumentList/DocumentList.tsx list container with loading and empty states
+- [x] T073 [US1] Create src/components/documents/DocumentList/DocumentListItem.tsx showing fileName, fileSize, status badge, uploadedAt
+- [x] T074 [US1] Create src/components/documents/DocumentList/index.ts barrel export
+- [x] T075 [US1] Create src/hooks/useDocuments.ts TanStack Query hook for fetching document list with polling for Pending status
+- [x] T076 [US1] Create src/pages/DocumentsPage.tsx integrating UploadZone and DocumentList components
+- [x] T077 [US1] Add error handling to useDocumentUpload: display error toast, show retry button (FR-001 scenario 3)
+- [x] T078 [US1] Add success notification to upload completion with auto-dismiss (FR-001 scenario 4)
+- [x] T079 [US1] Add batch upload support in UploadZone for multiple file selection (FR-003, FR-001 scenario 2)
 
 **Checkpoint**: User Story 1 is fully functional and testable independently - users can upload documents and see them in the list with status badges
 
@@ -150,16 +150,16 @@
 
 ### Implementation for User Story 2
 
-- [ ] T084 [P] [US2] Add pulsing animation to StatusBadge for Processing state (FR-007) in src/components/ui/Badge/StatusBadge.tsx
-- [ ] T085 [P] [US2] Add smooth transition animation (300ms ease-in-out) to StatusBadge status changes (FR-006) in src/components/ui/Badge/StatusBadge.tsx
-- [ ] T086 [P] [US2] Create src/components/ui/Badge/TagBadge.tsx with pill-shaped design, consistent colors per tag name (FR-021, FR-024)
+- [x] T084 [P] [US2] Add pulsing animation to StatusBadge for Processing state (FR-007) in src/components/ui/Badge/StatusBadge.tsx
+- [x] T085 [P] [US2] Add smooth transition animation (300ms ease-in-out) to StatusBadge status changes (FR-006) in src/components/ui/Badge/StatusBadge.tsx
+- [x] T086 [P] [US2] Create src/components/ui/Badge/TagBadge.tsx with pill-shaped design, consistent colors per tag name (FR-021, FR-024)
 - [ ] T087 [P] [US2] Create src/hooks/usePolling.ts hook for conditional polling (only when pending documents exist)
-- [ ] T088 [US2] Update src/hooks/useDocuments.ts to use usePolling with 5-second interval for documents with Pending/Processing status
-- [ ] T089 [US2] Update DocumentListItem to display classification tags as TagBadge components below document (FR-005 scenario 2)
+- [x] T088 [US2] Update src/hooks/useDocuments.ts to use usePolling with 5-second interval for documents with Pending/Processing status
+- [x] T089 [US2] Update DocumentListItem to display classification tags as TagBadge components below document (FR-005 scenario 2)
 - [ ] T090 [US2] Add confidence score display in classification results (FR-008) - prepare for detail view
-- [ ] T091 [US2] Update DocumentsPage to show retry button for Failed status documents (FR-005 scenario 3)
-- [ ] T092 [US2] Create src/hooks/useRetryClassification.ts TanStack Query mutation for retrying failed classifications
-- [ ] T093 [US2] Implement retry classification action with optimistic updates and error handling
+- [x] T091 [US2] Update DocumentsPage to show retry button for Failed status documents (FR-005 scenario 3)
+- [x] T092 [US2] Create src/hooks/useRetryClassification.ts TanStack Query mutation for retrying failed classifications
+- [x] T093 [US2] Implement retry classification action with optimistic updates and error handling
 
 **Checkpoint**: User Stories 1 AND 2 work independently - users can upload documents and see automatic status updates with visual feedback
 
