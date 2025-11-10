@@ -231,21 +231,21 @@
 
 ### Implementation for User Story 4
 
-- [ ] T119 [P] [US4] Create src/components/ui/Modal/Modal.tsx using Radix Dialog primitive with backdrop and animations
-- [ ] T120 [P] [US4] Create src/components/ui/Modal/index.ts barrel export
-- [ ] T121 [P] [US4] Create src/components/ui/Skeleton/Skeleton.tsx for loading placeholders
-- [ ] T122 [P] [US4] Create src/components/ui/Skeleton/index.ts barrel export
+- [x] T119 [P] [US4] Create src/components/ui/Modal/Modal.tsx using Radix Dialog primitive with backdrop and animations
+- [x] T120 [P] [US4] Create src/components/ui/Modal/index.ts barrel export
+- [x] T121 [P] [US4] Create src/components/ui/Skeleton/Skeleton.tsx for loading placeholders
+- [x] T122 [P] [US4] Create src/components/ui/Skeleton/index.ts barrel export
 - [x] T123 [US4] Create src/hooks/useDocumentDetail.ts TanStack Query hook for fetching single document by ID
-- [ ] T124 [US4] Create src/components/documents/DocumentDetailPanel/MetadataSection.tsx showing fileName, fileSize, dates, description
-- [ ] T125 [US4] Create src/components/documents/DocumentDetailPanel/ClassificationResults.tsx with confidence bars (FR-019)
-- [ ] T126 [US4] Create src/components/documents/DocumentDetailPanel/TagList.tsx showing automatic and manual tags
-- [ ] T127 [US4] Create src/components/documents/DocumentDetailPanel/RoutingTimeline.tsx with visual nodes and connecting lines (FR-020)
-- [ ] T128 [US4] Create src/components/documents/DocumentDetailPanel/DocumentDetailPanel.tsx integrating all sections with slide-in animation (FR-017)
-- [ ] T129 [US4] Create src/components/documents/DocumentDetailPanel/index.ts barrel export
-- [ ] T130 [US4] Add DocumentDetailPanel to DocumentsPage, triggered by DocumentListItem click
-- [ ] T131 [US4] Update useUIStore to manage detailPanelDocumentId for panel state
-- [ ] T132 [US4] Add loading states with Skeleton components while fetching document details
-- [ ] T133 [US4] Add manual tag input with auto-complete dropdown (FR-019 scenario 4, FR-022, FR-023)
+- [x] T124 [US4] Create src/components/documents/DocumentDetailPanel/MetadataSection.tsx showing fileName, fileSize, dates, description
+- [x] T125 [US4] Create src/components/documents/DocumentDetailPanel/ClassificationResults.tsx with confidence bars (FR-019)
+- [x] T126 [US4] Create src/components/documents/DocumentDetailPanel/TagList.tsx showing automatic and manual tags
+- [x] T127 [US4] Create src/components/documents/DocumentDetailPanel/RoutingTimeline.tsx with visual nodes and connecting lines (FR-020)
+- [x] T128 [US4] Create src/components/documents/DocumentDetailPanel/DocumentDetailPanel.tsx integrating all sections with slide-in animation (FR-017)
+- [x] T129 [US4] Create src/components/documents/DocumentDetailPanel/index.ts barrel export
+- [x] T130 [US4] Add DocumentDetailPanel to DocumentsPage, triggered by DocumentListItem click
+- [x] T131 [US4] Update useUIStore to manage detailPanelDocumentId for panel state
+- [x] T132 [US4] Add loading states with Skeleton components while fetching document details
+- [x] T133 [US4] Add manual tag input with auto-complete dropdown (FR-019 scenario 4, FR-022, FR-023)
 - [x] T134 [US4] Create src/hooks/useAddManualTag.ts TanStack Query mutation for adding tags
 - [x] T135 [US4] Create src/hooks/useRemoveManualTag.ts TanStack Query mutation for removing manual tags
 - [x] T136 [US4] Implement tag add/remove actions with optimistic updates

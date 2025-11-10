@@ -5,6 +5,7 @@
 
 import { UploadZone } from '@/components/documents/UploadZone';
 import { DocumentList } from '@/components/documents/DocumentList';
+import { DocumentDetailPanel } from '@/components/documents/DocumentDetailPanel';
 import { BatchActionBar } from '@/components/documents/BatchActionBar';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useDocuments } from '@/hooks/useDocuments';
@@ -20,6 +21,8 @@ export function DocumentsPage() {
   const retryMutation = useRetryClassification();
   const batchRetryMutation = useBatchRetry();
   const openDetailPanel = useUIStore((state) => state.openDetailPanel);
+  const closeDetailPanel = useUIStore((state) => state.closeDetailPanel);
+  const detailPanelDocumentId = useUIStore((state) => state.detailPanelDocumentId);
   
   // Use the document selection hook for batch operations
   const {
@@ -142,6 +145,12 @@ export function DocumentsPage() {
         </div>
       </main>
 
+      {/* Document Detail Panel */}
+      <DocumentDetailPanel
+        documentId={detailPanelDocumentId}
+        isOpen={!!detailPanelDocumentId}
+        onClose={closeDetailPanel}
+      />
       {/* Batch Action Bar */}
       <BatchActionBar
         selectedCount={selectedCount}
