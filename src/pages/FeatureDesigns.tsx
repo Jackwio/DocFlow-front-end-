@@ -3,10 +3,13 @@ import DocumentManagement from './DocumentManagement';
 import EasyUpload from './EasyUpload';
 import SmartSearch from './SmartSearch';
 import StatusTracking from './StatusTracking';
+import TenantSettings from './TenantSettings';
+import ComplianceAudit from './ComplianceAudit';
+import AIFeatures from './AIFeatures';
 import './FeatureDesigns.css';
 
 const FeatureDesigns: React.FC = () => {
-  const [activeView, setActiveView] = React.useState<'home' | 'document-management' | 'easy-upload' | 'smart-search' | 'status-tracking'>('home');
+  const [activeView, setActiveView] = React.useState<'home' | 'document-management' | 'easy-upload' | 'smart-search' | 'status-tracking' | 'tenant-settings' | 'compliance-audit' | 'ai-features'>('home');
 
   const features = [
     {
@@ -32,6 +35,24 @@ const FeatureDesigns: React.FC = () => {
       title: 'Status Tracking',
       icon: '✅',
       description: 'Track document approval status in real-time'
+    },
+    {
+      id: 'tenant-settings',
+      title: 'Tenant Settings',
+      icon: '⚙️',
+      description: 'Manage tenant configuration, inboxes, and usage'
+    },
+    {
+      id: 'compliance-audit',
+      title: 'Compliance & Audit',
+      icon: '🛡️',
+      description: 'Monitor compliance and manage audit records'
+    },
+    {
+      id: 'ai-features',
+      title: 'AI Features',
+      icon: '🤖',
+      description: 'Intelligent document processing and automation'
     }
   ];
 
@@ -45,6 +66,12 @@ const FeatureDesigns: React.FC = () => {
         return <SmartSearch />;
       case 'status-tracking':
         return <StatusTracking />;
+      case 'tenant-settings':
+        return <TenantSettings />;
+      case 'compliance-audit':
+        return <ComplianceAudit />;
+      case 'ai-features':
+        return <AIFeatures />;
       default:
         return (
           <div className="feature-designs-home">
@@ -71,7 +98,7 @@ const FeatureDesigns: React.FC = () => {
             <div className="design-note">
               <h3>📐 Design Mockups</h3>
               <p>
-                These are design mockups for the 4 main features of DocFlow. Click on any card above to view the detailed design for each feature.
+                These are design mockups for DocFlow features. Click on any card above to view the detailed design for each feature.
               </p>
             </div>
           </div>

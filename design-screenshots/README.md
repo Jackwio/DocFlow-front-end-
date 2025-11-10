@@ -1,8 +1,10 @@
 # Design Mockups for DocFlow Feature Cards
 
-This directory contains screenshots of the design mockups for the 4 main features:
+This directory contains screenshots of the design mockups for all DocFlow features:
 
-## 1. Document Management (📄)
+## Core Features (Original 4)
+
+### 1. Document Management (📄)
 Organize and manage all your documents in one place with:
 - Category-based organization (Financial, HR, Legal, Marketing, Technical)
 - Folder structure for better organization
@@ -28,7 +30,7 @@ Find documents easily with powerful search and filters:
 - Saved searches functionality
 - Preview and quick actions on results
 
-## 4. Status Tracking (✅)
+### 4. Status Tracking (✅)
 Track document approval status in real-time with:
 - Statistics dashboard (Total, Pending, Approved, Rejected)
 - Document workflow visualization
@@ -39,6 +41,54 @@ Track document approval status in real-time with:
 - Quick actions panel
 
 ![Status Tracking Design](./status-tracking-design.png)
+
+## Administrative Features (New)
+
+### 5. Tenant Settings (⚙️)
+Manage tenant configuration, inboxes, and usage with:
+- Plan usage overview (documents, storage, rules, inboxes)
+- Inbox management by department/workflow
+- Document retention period settings
+- File size limits configuration
+- Privacy mode controls (strict privacy settings)
+- Custom tag color and name management
+- Current plan and billing information
+- Quick access to API keys and notifications
+
+![Tenant Settings Design](./05-tenant-settings.png)
+
+### 6. Compliance & Audit (🛡️)
+Monitor compliance and manage audit records with:
+- Detailed audit log table with filtering
+- Audit export functionality (CSV/JSON/PDF)
+- Digital signature and verification certificate support
+- Document retention policies management
+- Automatic cleanup scheduling
+- Privacy settings configuration
+- Compliance status dashboard
+- Quick verification and import tools
+
+![Compliance & Audit Design](./06-compliance-audit.png)
+
+### 7. AI Features (🤖)
+Intelligent document processing and automation with:
+- AI system status monitoring
+- AI-powered document processing
+- Suggested tags with confidence scores
+- One-click tag application
+- AI-generated document summaries
+- AI feature configuration toggles
+- Emergency AI shutdown controls
+- AI usage statistics and accuracy metrics
+- Tips for improving AI accuracy
+
+![AI Features Design](./07-ai-features.png)
+
+## Updated Homepage
+
+The homepage now includes all 7 feature cards for comprehensive access:
+
+![Updated Homepage](./00-feature-home-updated.png)
 
 ## Viewing the Designs
 
