@@ -21,3 +21,9 @@ export { useRemoveManualTag } from './useRemoveManualTag';
 
 export { useClassificationHistory } from './useClassificationHistory';
 export type { UseClassificationHistoryOptions } from './useClassificationHistory';
+
+export { useDocumentSelection } from './useDocumentSelection';
+export type { UseDocumentSelectionReturn } from './useDocumentSelection';
+
+export { useBatchRetry } from './useBatchRetry';
+export type { BatchRetryResult, BatchRetryProgress } from './useBatchRetry';
