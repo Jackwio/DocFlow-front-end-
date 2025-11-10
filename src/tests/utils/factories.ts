@@ -9,8 +9,8 @@ import type {
   DocumentListDto,
   TagDto,
   ClassificationResultDto,
-  TagSource,
 } from '@/types';
+import { TagSource } from '@/types';
 
 /**
  * Create test document DTO
