@@ -1,11 +1,11 @@
 # DocFlow Front-End Implementation Tasks
 
 ## Phase 1: Basic UI Components
-- [ ] Create a Header component with navigation
-- [ ] Create a Sidebar component for navigation menu
-- [ ] Create a Dashboard page as the main landing page
-- [ ] Setup routing with React Router
-- [ ] Create a basic layout structure
+- [x] Create a Header component with navigation
+- [x] Create a Sidebar component for navigation menu
+- [x] Create a Dashboard page as the main landing page
+- [x] Setup routing with React Router
+- [x] Create a basic layout structure
 
 ## Phase 2: Document Management Features
 - [ ] Create DocumentList component to display documents
