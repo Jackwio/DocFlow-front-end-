@@ -98,10 +98,29 @@ export class DocumentsApiService {
     skipCount?: number;
     maxResultCount?: number;
   }): Promise<PagedResultDto<DocumentListDto>> {
-    const response = await getApiClient().get<PagedResultDto<DocumentListDto>>('/api/documents', {
-      params,
-    });
-    return response.data;
+    const response = await getApiClient().get('/api/documents', { params });
+
+    // Normalize server response into our frontend DTO shape.
+    // Some backends return `fileSizeBytes` and `creationTime` instead of `fileSize`/`uploadedAt`.
+    const data = response.data as PagedResultDto<any>;
+
+    const items: DocumentListDto[] = (data.items || []).map((it: any) => ({
+      id: it.id,
+      fileName: it.fileName,
+      // prefer `fileSize`, fall back to `fileSizeBytes` then 0
+      fileSize: typeof it.fileSize === 'number' ? it.fileSize : typeof it.fileSizeBytes === 'number' ? it.fileSizeBytes : 0,
+      // prefer `status`, fall back to `documentStatus` or 0 (Pending)
+      status: typeof it.status === 'number' ? it.status : typeof it.documentStatus === 'number' ? it.documentStatus : 0,
+      // prefer `uploadedAt`, fall back to `creationTime` or empty string
+      uploadedAt: it.uploadedAt ?? it.creationTime ?? '',
+      classifiedAt: it.classifiedAt ?? it.classifiedTime ?? undefined,
+      tags: it.tags ?? it.tagNames ?? [],
+    }));
+
+    return {
+      totalCount: typeof data.totalCount === 'number' ? data.totalCount : items.length,
+      items,
+    };
   }
 
   /**
