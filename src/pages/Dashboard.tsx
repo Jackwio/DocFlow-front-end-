@@ -34,6 +34,27 @@ const Dashboard: React.FC = () => {
       icon: '✅',
       description: 'Track document approval status in real-time',
       color: '#fff3e0'
+    },
+    {
+      id: 'tenant-settings',
+      title: 'Tenant Settings',
+      icon: '⚙️',
+      description: 'Manage configuration, inboxes, and usage monitoring',
+      color: '#f3e5f5'
+    },
+    {
+      id: 'compliance-audit',
+      title: 'Compliance & Audit',
+      icon: '🛡️',
+      description: 'Monitor compliance and manage audit records',
+      color: '#e0f2f1'
+    },
+    {
+      id: 'ai-features',
+      title: 'AI Features',
+      icon: '🤖',
+      description: 'Intelligent document processing and automation',
+      color: '#fff9c4'
     }
   ];
 
