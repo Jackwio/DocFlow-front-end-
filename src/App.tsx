@@ -38,40 +38,7 @@ function App() {
 
   return (
     <Layout>
-      <div style={{ padding: 12 }}>
-        <nav style={{ marginBottom: 12 }}>
-          <button
-            onClick={() => {
-              setPage('dashboard');
-              // @ts-ignore
-              window.__docflow_currentPage = 'dashboard';
-            }}
-            style={{ marginRight: 8 }}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => {
-              setPage('documents');
-              // @ts-ignore
-              window.__docflow_currentPage = 'documents';
-            }}
-            style={{ marginRight: 8 }}
-          >
-            Documents
-          </button>
-          <button
-            onClick={() => {
-              setPage('workflow');
-              // @ts-ignore
-              window.__docflow_currentPage = 'workflow';
-            }}
-          >
-            Workflow
-          </button>
-        </nav>
-        {renderPage()}
-      </div>
+      {renderPage()}
     </Layout>
   );
 }
