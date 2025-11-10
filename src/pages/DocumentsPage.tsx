@@ -1,9 +1,8 @@
 /**
  * DocumentsPage component
- * Main page integrating upload zone and document list
+ * Main page integrating upload zone, search, filters, and document list
  */
 
-import { useState } from 'react';
 import { UploadZone } from '@/components/documents/UploadZone';
 import { DocumentList } from '@/components/documents/DocumentList';
 import { BatchActionBar } from '@/components/documents/BatchActionBar';
@@ -13,7 +12,16 @@ import { useDocuments } from '@/hooks/useDocuments';
 import { useDocumentSelection } from '@/hooks/useDocumentSelection';
 import { useRetryClassification } from '@/hooks/useRetryClassification';
 import { useBatchRetry } from '@/hooks/useBatchRetry';
+import { DocumentDetailPanel } from '@/components/documents/DocumentDetailPanel';
+import { BatchActionBar } from '@/components/documents/BatchActionBar';
+import { ToastContainer } from '@/components/ui/Toast';
+import { useDocuments } from '@/hooks/useDocuments';
+import { useDocumentSearch } from '@/hooks/useDocumentSearch';
+import { useRetryClassification } from '@/hooks/useRetryClassification';
+import { useBatchRetry } from '@/hooks/useBatchRetry';
+import { useDocumentSelection } from '@/hooks/useDocumentSelection';
 import { useUIStore } from '@/state/useUIStore';
+import { DocumentStatus } from '@/types';
 
 export function DocumentsPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -36,12 +44,59 @@ export function DocumentsPage() {
     toggleSelection(id);
   };
 
-  const handleDocumentClick = (id: string) => {
-    openDetailPanel(id);
+  const handleSelectAll = () => {
+    const documentIds = documents.map((doc) => doc.id);
+    selectAll(documentIds);
   };
 
-  const handleDocumentRetry = (id: string) => {
+  const handleDeselectAll = () => {
+    clearSelection();
+  };
+
+  const handleDocumentClick = useCallback((id: string) => {
+    openDetailPanel(id);
+  }, [openDetailPanel]);
+
+  const handleDocumentRetry = useCallback((id: string) => {
     retryMutation.mutate(id);
+  }, [retryMutation]);
+
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleStatusChange = useCallback((status: DocumentStatus | null) => {
+    setSelectedStatus(status);
+  }, []);
+
+  const handleTagsChange = useCallback((tags: string[]) => {
+    setSelectedTags(tags);
+  }, []);
+
+  const handleClearAllFilters = useCallback(() => {
+    setSearchQuery('');
+    setSelectedStatus(null);
+    setSelectedTags([]);
+  }, []);
+
+  const handleBatchRetry = () => {
+    // Filter to only retry failed documents from selection
+    const selectedDocuments = documents.filter((doc) => selectedIds.has(doc.id));
+    const failedDocumentIds = selectedDocuments
+      .filter((doc) => doc.status === DocumentStatus.Failed)
+      .map((doc) => doc.id);
+
+    if (failedDocumentIds.length === 0) {
+      // Show notification if no failed documents in selection
+      return;
+    }
+
+    batchRetryMutation.mutate(failedDocumentIds, {
+      onSuccess: () => {
+        // Clear selection after successful batch retry
+        clearSelection();
+      },
+    });
   };
 
   // T148: Select all / deselect all

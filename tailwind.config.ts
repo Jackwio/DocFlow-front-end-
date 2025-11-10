@@ -71,6 +71,8 @@ export default {
         'fade-in': 'fadeIn 0.2s ease-in',
         'stagger': 'stagger 0.3s ease-in-out',
         'checkmark': 'checkmark 0.2s ease-out',
+        'slideUp': 'slideUp 0.3s ease-out',
+        'checkBounce': 'checkBounce 0.2s ease-in-out',
       },
       keyframes: {
         pulseSoft: {
@@ -104,6 +106,13 @@ export default {
         checkmark: {
           '0%': { opacity: '0', transform: 'scale(0.8)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        slideUp: {
+          '0%': { transform: 'translateY(100%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        checkBounce: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.1)' },
         },
       },
       transitionDuration: {

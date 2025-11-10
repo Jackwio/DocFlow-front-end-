@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import DocumentList from '../components/documents/DocumentList';
+import { DocumentList } from '../components/documents/DocumentList';
 import DocumentUpload from '../components/documents/DocumentUpload';
 import { DocumentsApiService } from '../services/api/documents';
 import { DocumentListDto, DocumentStatus } from '../types/document';

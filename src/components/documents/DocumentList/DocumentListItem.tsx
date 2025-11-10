@@ -8,6 +8,7 @@ import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { formatFileSize, formatDate } from '@/utils/formatting';
+import { HighlightedText } from '@/utils/highlighting';
 import type { DocumentListDto, DocumentStatus } from '@/types';
 import { clsx } from 'clsx';
 
@@ -17,6 +18,7 @@ export interface DocumentListItemProps {
   onSelect?: (id: string) => void;
   onClick?: (id: string) => void;
   onRetry?: (id: string) => void;
+  searchQuery?: string;
   className?: string;
   showCheckbox?: boolean;
 }
@@ -27,11 +29,13 @@ export function DocumentListItem({
   onSelect,
   onClick,
   onRetry,
+  searchQuery,
   className,
   showCheckbox = false,
 }: DocumentListItemProps) {
   const [isHovered, setIsHovered] = useState(false);
   const isFailed = document.status === 2; // DocumentStatus.Failed
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
@@ -47,6 +51,8 @@ export function DocumentListItem({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick?.(document.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {
@@ -77,7 +83,7 @@ export function DocumentListItem({
           
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold text-neutral-900 truncate">
-              {document.fileName}
+              <HighlightedText text={document.fileName} query={searchQuery} />
             </h3>
             <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
               <span>{formatFileSize(document.fileSize)}</span>
@@ -94,7 +100,7 @@ export function DocumentListItem({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          <StatusBadge status={document.status as DocumentStatus} size="sm" />
+          <StatusBadge status={document.status} size="sm" />
           {isFailed && onRetry && (
             <Button
               variant="secondary"
