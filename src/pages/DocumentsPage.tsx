@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { UploadZone } from '@/components/documents/UploadZone';
 import { DocumentList } from '@/components/documents/DocumentList';
+import { DocumentDetailPanel } from '@/components/documents/DocumentDetailPanel';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useDocuments } from '@/hooks/useDocuments';
 import { useRetryClassification } from '@/hooks/useRetryClassification';
@@ -16,6 +17,8 @@ export function DocumentsPage() {
   const { documents, isLoading, totalCount } = useDocuments();
   const retryMutation = useRetryClassification();
   const openDetailPanel = useUIStore((state) => state.openDetailPanel);
+  const closeDetailPanel = useUIStore((state) => state.closeDetailPanel);
+  const detailPanelDocumentId = useUIStore((state) => state.detailPanelDocumentId);
 
   const handleDocumentSelect = (id: string) => {
     setSelectedDocumentIds((prev) =>
@@ -87,6 +90,13 @@ export function DocumentsPage() {
           </section>
         </div>
       </main>
+
+      {/* Document Detail Panel */}
+      <DocumentDetailPanel
+        documentId={detailPanelDocumentId}
+        isOpen={!!detailPanelDocumentId}
+        onClose={closeDetailPanel}
+      />
     </div>
   );
 }
