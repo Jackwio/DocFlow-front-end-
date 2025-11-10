@@ -4,6 +4,7 @@
  */
 
 import { DocumentListItem } from './DocumentListItem';
+import { Checkbox } from '@/components/ui/Checkbox';
 import type { DocumentListDto } from '@/types';
 import { clsx } from 'clsx';
 
@@ -14,6 +15,10 @@ export interface DocumentListProps {
   onDocumentSelect?: (id: string) => void;
   onDocumentClick?: (id: string) => void;
   onDocumentRetry?: (id: string) => void;
+  onSelectAll?: () => void;
+  onDeselectAll?: () => void;
+  totalCount?: number;
+  searchQuery?: string;
   className?: string;
 }
 
@@ -24,8 +29,23 @@ export function DocumentList({
   onDocumentSelect,
   onDocumentClick,
   onDocumentRetry,
+  onSelectAll,
+  onDeselectAll,
+  totalCount,
+  searchQuery,
   className,
 }: DocumentListProps) {
+  const allSelected = documents.length > 0 && selectedDocumentIds.length === documents.length;
+  const someSelected = selectedDocumentIds.length > 0 && !allSelected;
+
+  const handleSelectAllChange = () => {
+    if (allSelected) {
+      onDeselectAll?.();
+    } else {
+      onSelectAll?.();
+    }
+  };
+
   if (isLoading) {
     return (
       <div className={clsx('flex items-center justify-center py-12', className)}>
@@ -86,7 +106,35 @@ export function DocumentList({
   }
 
   return (
-    <div className={clsx('space-y-3', className)} role="list">
+    <div className={className}>
+      {/* Header with Select All checkbox */}
+      {onDocumentSelect && documents.length > 0 && (
+        <div className="mb-4 pb-3 border-b border-neutral-200">
+          <div className="flex items-center justify-between">
+            <Checkbox
+              checked={allSelected}
+              indeterminate={someSelected}
+              onChange={handleSelectAllChange}
+              label={
+                allSelected
+                  ? `All ${documents.length} selected`
+                  : someSelected
+                  ? `${selectedDocumentIds.length} of ${documents.length} selected`
+                  : `Select all ${documents.length} documents`
+              }
+              className="text-sm"
+            />
+            {selectedDocumentIds.length > 0 && (
+              <span className="text-xs text-neutral-500">
+                {selectedDocumentIds.length} document{selectedDocumentIds.length !== 1 ? 's' : ''} selected
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* Document list */}
+      <div className="space-y-3" role="list">
       {documents.map((document) => (
         <DocumentListItem
           key={document.id}
@@ -97,6 +145,7 @@ export function DocumentList({
           onRetry={onDocumentRetry}
         />
       ))}
+      </div>
     </div>
   );
 }

@@ -1,38 +1,98 @@
 /**
  * DocumentsPage component
- * Main page integrating upload zone and document list
+ * Main page integrating upload zone, search, filters, and document list
  */
 
-import { useState } from 'react';
 import { UploadZone } from '@/components/documents/UploadZone';
 import { DocumentList } from '@/components/documents/DocumentList';
 import { DocumentDetailPanel } from '@/components/documents/DocumentDetailPanel';
+import { BatchActionBar } from '@/components/documents/BatchActionBar';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useDocuments } from '@/hooks/useDocuments';
+import { useDocumentSearch } from '@/hooks/useDocumentSearch';
 import { useRetryClassification } from '@/hooks/useRetryClassification';
+import { useBatchRetry } from '@/hooks/useBatchRetry';
+import { useDocumentSelection } from '@/hooks/useDocumentSelection';
 import { useUIStore } from '@/state/useUIStore';
+import { DocumentStatus } from '@/types';
 
 export function DocumentsPage() {
-  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
   const { documents, isLoading, totalCount } = useDocuments();
   const retryMutation = useRetryClassification();
+  const batchRetryMutation = useBatchRetry();
   const openDetailPanel = useUIStore((state) => state.openDetailPanel);
   const closeDetailPanel = useUIStore((state) => state.closeDetailPanel);
   const detailPanelDocumentId = useUIStore((state) => state.detailPanelDocumentId);
+  
+  // Use the document selection hook for batch operations
+  const {
+    selectedIds,
+    toggleSelection,
+    selectAll,
+    clearSelection,
+    selectedCount,
+  } = useDocumentSelection();
 
   const handleDocumentSelect = (id: string) => {
-    setSelectedDocumentIds((prev) =>
-      prev.includes(id) ? prev.filter((docId) => docId !== id) : [...prev, id]
-    );
+    toggleSelection(id);
   };
 
-  const handleDocumentClick = (id: string) => {
+  const handleSelectAll = () => {
+    const documentIds = documents.map((doc) => doc.id);
+    selectAll(documentIds);
+  };
+
+  const handleDeselectAll = () => {
+    clearSelection();
+  };
+
+  const handleDocumentClick = useCallback((id: string) => {
     openDetailPanel(id);
+  }, [openDetailPanel]);
+
+  const handleDocumentRetry = useCallback((id: string) => {
+    retryMutation.mutate(id);
+  }, [retryMutation]);
+
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleStatusChange = useCallback((status: DocumentStatus | null) => {
+    setSelectedStatus(status);
+  }, []);
+
+  const handleTagsChange = useCallback((tags: string[]) => {
+    setSelectedTags(tags);
+  }, []);
+
+  const handleClearAllFilters = useCallback(() => {
+    setSearchQuery('');
+    setSelectedStatus(null);
+    setSelectedTags([]);
+  }, []);
+
+  const handleBatchRetry = () => {
+    // Filter to only retry failed documents from selection
+    const selectedDocuments = documents.filter((doc) => selectedIds.has(doc.id));
+    const failedDocumentIds = selectedDocuments
+      .filter((doc) => doc.status === DocumentStatus.Failed)
+      .map((doc) => doc.id);
+
+    if (failedDocumentIds.length === 0) {
+      // Show notification if no failed documents in selection
+      return;
+    }
+
+    batchRetryMutation.mutate(failedDocumentIds, {
+      onSuccess: () => {
+        // Clear selection after successful batch retry
+        clearSelection();
+      },
+    });
   };
 
-  const handleDocumentRetry = (id: string) => {
-    retryMutation.mutate(id);
-  };
+  const selectedDocumentIds = Array.from(selectedIds);
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -70,14 +130,6 @@ export function DocumentsPage() {
                   </span>
                 )}
               </h2>
-              {selectedDocumentIds.length > 0 && (
-                <button
-                  onClick={() => setSelectedDocumentIds([])}
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 rounded px-2 py-1"
-                >
-                  Clear selection ({selectedDocumentIds.length})
-                </button>
-              )}
             </div>
             <DocumentList
               documents={documents}
@@ -86,6 +138,8 @@ export function DocumentsPage() {
               onDocumentSelect={handleDocumentSelect}
               onDocumentClick={handleDocumentClick}
               onDocumentRetry={handleDocumentRetry}
+              onSelectAll={handleSelectAll}
+              onDeselectAll={handleDeselectAll}
             />
           </section>
         </div>
@@ -96,6 +150,13 @@ export function DocumentsPage() {
         documentId={detailPanelDocumentId}
         isOpen={!!detailPanelDocumentId}
         onClose={closeDetailPanel}
+      />
+      {/* Batch Action Bar */}
+      <BatchActionBar
+        selectedCount={selectedCount}
+        onRetryAll={handleBatchRetry}
+        onClearSelection={clearSelection}
+        isRetrying={batchRetryMutation.isPending}
       />
     </div>
   );

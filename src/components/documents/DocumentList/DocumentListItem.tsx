@@ -3,9 +3,12 @@
  * Individual document list item with status badge and metadata
  */
 
+import { useState } from 'react';
 import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { formatFileSize, formatDate } from '@/utils/formatting';
+import { HighlightedText } from '@/utils/highlighting';
 import type { DocumentListDto, DocumentStatus } from '@/types';
 import { clsx } from 'clsx';
 
@@ -15,6 +18,7 @@ export interface DocumentListItemProps {
   onSelect?: (id: string) => void;
   onClick?: (id: string) => void;
   onRetry?: (id: string) => void;
+  searchQuery?: string;
   className?: string;
 }
 
@@ -24,20 +28,24 @@ export function DocumentListItem({
   onSelect,
   onClick,
   onRetry,
+  searchQuery,
   className,
 }: DocumentListItemProps) {
   const isFailed = document.status === 2; // DocumentStatus.Failed
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
       className={clsx(
-        'border border-neutral-200 rounded-lg p-4 transition-all duration-150',
-        'hover:shadow-md hover:border-primary-300',
-        isSelected && 'ring-2 ring-primary-500 border-primary-500',
+        'border border-neutral-200 rounded-lg p-4 transition-all duration-150 group',
+        'hover:shadow-md hover:border-primary-300 hover:bg-neutral-50',
+        isSelected && 'ring-2 ring-primary-500 border-primary-500 bg-primary-50',
         onClick && 'cursor-pointer',
         className
       )}
       onClick={() => onClick?.(document.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {
@@ -48,20 +56,25 @@ export function DocumentListItem({
       }}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
+        <div className="flex items-start gap-3 flex-1 min-w-0">
           {onSelect && (
-            <input
-              type="checkbox"
-              checked={isSelected}
-              onChange={() => onSelect(document.id)}
-              onClick={(e) => e.stopPropagation()}
-              className="mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
-              aria-label={`Select ${document.fileName}`}
-            />
+            <div
+              className={clsx(
+                'transition-opacity duration-200',
+                isHovered || isSelected ? 'opacity-100' : 'opacity-0'
+              )}
+            >
+              <Checkbox
+                checked={isSelected}
+                onChange={() => onSelect(document.id)}
+                onClick={(e) => e.stopPropagation()}
+                aria-label={`Select ${document.fileName}`}
+              />
+            </div>
           )}
-          <div className="inline-block">
+          <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold text-neutral-900 truncate">
-              {document.fileName}
+              <HighlightedText text={document.fileName} query={searchQuery} />
             </h3>
             <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
               <span>{formatFileSize(document.fileSize)}</span>
@@ -78,7 +91,7 @@ export function DocumentListItem({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          <StatusBadge status={document.status as DocumentStatus} size="sm" />
+          <StatusBadge status={document.status} size="sm" />
           {isFailed && onRetry && (
             <Button
               variant="secondary"
