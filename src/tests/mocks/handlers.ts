@@ -40,15 +40,32 @@ export const handlers = [
     // Convert DocumentDto to DocumentListDto (simplified version)
     const items: DocumentListDto[] = mockDocuments
       .slice(skipCount, skipCount + maxResultCount)
-      .map((doc) => ({
-        id: doc.id,
-        fileName: doc.fileName,
-        fileSize: doc.fileSize,
-        status: doc.status,
-        uploadedAt: doc.uploadedAt,
-        classifiedAt: doc.classifiedAt,
-        tags: doc.tags.map((tag) => tag.name), // Extract tag names
-      }));
+      .map((doc) => {
+        // Simulate background classification: if a document has been pending for
+        // more than 5 seconds, mark it as Classified for the mock response.
+        let status = doc.status;
+        try {
+          if (status === 0 && doc.uploadedAt) {
+            const uploadedMs = new Date(doc.uploadedAt).getTime();
+            if (!Number.isNaN(uploadedMs) && Date.now() - uploadedMs > 5000) {
+              status = 1; // Classified
+            }
+          }
+        } catch (e) {
+          // fallback to original status on error
+          status = doc.status;
+        }
+
+        return {
+          id: doc.id,
+          fileName: doc.fileName,
+          fileSize: doc.fileSize,
+          status,
+          uploadedAt: doc.uploadedAt,
+          classifiedAt: doc.classifiedAt,
+          tags: doc.tags.map((tag) => tag.name), // Extract tag names
+        };
+      });
 
     const result: PagedResultDto<DocumentListDto> = {
       totalCount: mockDocuments.length,

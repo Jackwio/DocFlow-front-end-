@@ -6,19 +6,14 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-describe('App', () => {
-  it('renders DocFlow header', () => {
-    render(<App />);
-    const heading = screen.getByRole('heading', {
-      name: /DocFlow - Document Intake & Classification/i,
-      level: 1,
-    });
-    expect(heading).toBeInTheDocument();
-  });
+test('renders DocFlow header', () => {
+  render(<App />);
+  const headerElement = screen.getByText(/DocFlow/i);
+  expect(headerElement).toBeInTheDocument();
+});
 
-  it('renders upload zone', () => {
-    render(<App />);
-    const uploadButton = screen.getByRole('button', { name: /Browse Files/i });
-    expect(uploadButton).toBeInTheDocument();
-  });
+test('renders Dashboard page by default', () => {
+  render(<App />);
+  const dashboardHeading = screen.getByRole('heading', { name: /Dashboard/i, level: 1 });
+  expect(dashboardHeading).toBeInTheDocument();
 });

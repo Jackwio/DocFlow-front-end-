@@ -1,32 +1,45 @@
-/**
- * Main application component
- */
+import React from 'react';
+import Layout from './components/layout/Layout';
+import Dashboard from './pages/Dashboard';
+import Documents from './pages/Documents';
+import Workflow from './pages/Workflow';
+import './App.css';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { DocumentsPage } from './pages/DocumentsPage';
-import './styles/globals.css';
-
-// Create QueryClient instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
+type Page = 'dashboard' | 'documents' | 'workflow';
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <DocumentsPage />
+  const [page, setPage] = React.useState<Page>('dashboard');
 
-      {/* Dev tools - only in development */}
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-    </QueryClientProvider>
+  React.useEffect(() => {
+    // expose current page to other components (Header/Sidebar) and listen for navigation events
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.__docflow_currentPage = page;
+
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as Page | undefined;
+      if (detail) setPage(detail);
+    };
+
+    window.addEventListener('docflow:navigate', handler as EventListener);
+    return () => window.removeEventListener('docflow:navigate', handler as EventListener);
+  }, [page]);
+
+  const renderPage = () => {
+    switch (page) {
+      case 'documents':
+        return <Documents />;
+      case 'workflow':
+        return <Workflow />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
+  return (
+    <Layout>
+      {renderPage()}
+    </Layout>
   );
 }
 

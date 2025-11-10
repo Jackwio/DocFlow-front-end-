@@ -133,6 +133,12 @@
 
 **Checkpoint**: User Story 1 is fully functional and testable independently - users can upload documents and see them in the list with status badges
 
+**✅ STATUS**: Implementation COMPLETE. Tests PENDING (need to be added retroactively for 80% coverage).
+**🔧 FIXES APPLIED**: 
+- Fixed NaN display issue in file sizes by normalizing API response fields (fileSizeBytes → fileSize)
+- Added defensive checks in formatFileSize utility
+- Mock handlers simulate Pending → Classified status transitions for local development
+
 ---
 
 ## Phase 4: User Story 2 - Real-Time Document Status Monitoring (Priority: P1)
@@ -163,6 +169,14 @@
 
 **Checkpoint**: User Stories 1 AND 2 work independently - users can upload documents and see automatic status updates with visual feedback
 
+**🟡 STATUS**: Partial implementation COMPLETE. Tests PENDING.
+**✅ COMPLETED**: StatusBadge animations, TagBadge component, polling in useDocuments, retry classification
+**⏳ PENDING**: Standalone usePolling hook (polling logic embedded directly in useDocuments), confidence score display
+
+**🟡 STATUS**: Partial implementation COMPLETE. Tests PENDING.
+**✅ COMPLETED**: StatusBadge animations, TagBadge component, polling in useDocuments, retry classification
+**⏳ PENDING**: Standalone usePolling hook (polling logic embedded directly in useDocuments), confidence score display
+
 ---
 
 ## Phase 5: User Story 3 - Visual Document Search & Filtering (Priority: P2)
@@ -186,7 +200,7 @@
 - [ ] T101 [P] [US3] Create src/components/ui/Input/index.ts barrel export
 - [ ] T102 [P] [US3] Create src/components/ui/Chip/FilterChip.tsx with selected/unselected visual states (FR-010)
 - [ ] T103 [P] [US3] Create src/components/ui/Chip/index.ts barrel export
-- [ ] T104 [US3] Create src/hooks/useDocumentSearch.ts hook managing DocumentFilters state and search API call
+- [x] T104 [US3] Create src/hooks/useDocumentSearch.ts hook managing DocumentFilters state and search API call
 - [ ] T105 [US3] Create src/components/documents/SearchBar/SearchBar.tsx with instant filtering as user types (FR-009)
 - [ ] T106 [US3] Create src/components/documents/SearchBar/index.ts barrel export
 - [ ] T107 [US3] Create src/components/documents/FilterPanel/FilterPanel.tsx with status and tag filter chips
@@ -221,7 +235,7 @@
 - [ ] T120 [P] [US4] Create src/components/ui/Modal/index.ts barrel export
 - [ ] T121 [P] [US4] Create src/components/ui/Skeleton/Skeleton.tsx for loading placeholders
 - [ ] T122 [P] [US4] Create src/components/ui/Skeleton/index.ts barrel export
-- [ ] T123 [US4] Create src/hooks/useDocumentDetail.ts TanStack Query hook for fetching single document by ID
+- [x] T123 [US4] Create src/hooks/useDocumentDetail.ts TanStack Query hook for fetching single document by ID
 - [ ] T124 [US4] Create src/components/documents/DocumentDetailPanel/MetadataSection.tsx showing fileName, fileSize, dates, description
 - [ ] T125 [US4] Create src/components/documents/DocumentDetailPanel/ClassificationResults.tsx with confidence bars (FR-019)
 - [ ] T126 [US4] Create src/components/documents/DocumentDetailPanel/TagList.tsx showing automatic and manual tags
@@ -232,9 +246,9 @@
 - [ ] T131 [US4] Update useUIStore to manage detailPanelDocumentId for panel state
 - [ ] T132 [US4] Add loading states with Skeleton components while fetching document details
 - [ ] T133 [US4] Add manual tag input with auto-complete dropdown (FR-019 scenario 4, FR-022, FR-023)
-- [ ] T134 [US4] Create src/hooks/useAddManualTag.ts TanStack Query mutation for adding tags
-- [ ] T135 [US4] Create src/hooks/useRemoveManualTag.ts TanStack Query mutation for removing manual tags
-- [ ] T136 [US4] Implement tag add/remove actions with optimistic updates
+- [x] T134 [US4] Create src/hooks/useAddManualTag.ts TanStack Query mutation for adding tags
+- [x] T135 [US4] Create src/hooks/useRemoveManualTag.ts TanStack Query mutation for removing manual tags
+- [x] T136 [US4] Implement tag add/remove actions with optimistic updates
 
 **Checkpoint**: User Stories 1-4 all work independently - detail view doesn't interfere with upload, monitoring, or search
 
@@ -463,6 +477,30 @@ Stories integrate seamlessly because they're independently testable and don't sh
 ---
 
 ## Task Summary
+
+- **Total Tasks**: 194
+- **Setup Phase**: 29 tasks ✅ **ALL COMPLETE**
+- **Foundational Phase**: 22 tasks ✅ **ALL COMPLETE**
+- **User Story 1**: 28 tasks ✅ **ALL IMPLEMENTATION COMPLETE** ⚠️ **TESTS PENDING (6 test tasks)**
+- **User Story 2**: 14 tasks 🟡 **PARTIAL** (7/10 implementation ✅, 0/4 tests ❌)
+- **User Story 3**: 15 tasks ❌ **NOT STARTED** (useDocumentSearch hook exists but no UI components)
+- **User Story 4**: 23 tasks 🟡 **HOOKS ONLY** (useDocumentDetail, useAddManualTag, useRemoveManualTag, useClassificationHistory exist, no UI)
+- **User Story 5**: 16 tasks ❌ **NOT STARTED**
+- **User Story 6**: 12 tasks ❌ **NOT STARTED**
+- **Polish Phase**: 26 tasks ❌ **NOT STARTED**
+
+**Test Coverage**: 30+ dedicated test tasks ⚠️ **CRITICAL**: Only 3/30+ tests exist (formatting, validation, useUIStore)
+
+**Current MVP Status**: 🟡 User Story 1 implementation complete, functional for upload and list view, but missing test coverage
+
+**Priority Actions**:
+1. ⚠️ Add retroactive tests for User Story 1 (T052-T057) to meet 80% coverage requirement
+2. Complete User Story 2 implementation (T087, T090)
+3. Add tests for User Story 2 (T080-T083)
+
+---
+
+## Task Summary (Original)
 
 - **Total Tasks**: 194
 - **Setup Phase**: 29 tasks
