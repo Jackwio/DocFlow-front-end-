@@ -24,35 +24,35 @@
 
 **Purpose**: Initialize TypeScript + React + Vite project with all required dependencies
 
-- [ ] T001 Initialize Vite project with React-TypeScript template in repository root
-- [ ] T002 [P] Install core dependencies: react@18.2, react-dom@18.2, typescript@5.3
-- [ ] T003 [P] Install state management: @tanstack/react-query@5, zustand@4
-- [ ] T004 [P] Install styling: tailwindcss@3.4, autoprefixer, postcss
-- [ ] T005 [P] Install form libraries: react-hook-form@7, zod@3, @hookform/resolvers
-- [ ] T006 [P] Install HTTP client: axios@1.6
-- [ ] T007 [P] Install dev dependencies: vitest@1, @testing-library/react@16, @testing-library/user-event@14, jsdom
-- [ ] T008 [P] Install test utilities: msw@2, @testing-library/jest-dom
-- [ ] T009 [P] Install E2E testing: @playwright/test@1.40
-- [ ] T010 [P] Install UI libraries: @radix-ui/react-dialog, @radix-ui/react-dropdown-menu, @radix-ui/react-tooltip
-- [ ] T011 [P] Install animation: framer-motion@11
-- [ ] T012 [P] Install utilities: clsx, date-fns
-- [ ] T013 [P] Install dev tools: eslint@8, @typescript-eslint/parser, @typescript-eslint/eslint-plugin, prettier@3
-- [ ] T014 [P] Install git hooks: husky@9, lint-staged@15
-- [ ] T015 Configure tsconfig.json with strict mode enabled and path aliases (@/components, @/hooks, etc.)
-- [ ] T016 Configure vite.config.ts with path aliases, plugins, and build optimization
-- [ ] T017 Configure vitest.config.ts with jsdom environment, coverage thresholds (80%), and setupFiles
-- [ ] T018 Configure playwright.config.ts for Chromium/Firefox/Safari with baseURL and test directory
-- [ ] T019 Configure tailwind.config.ts with custom design tokens (status colors, spacing, animations)
-- [ ] T020 Configure .eslintrc.cjs with TypeScript rules, no-any, import ordering
-- [ ] T021 Configure .prettierrc with code formatting rules
-- [ ] T022 Setup Husky pre-commit hook to run lint-staged
-- [ ] T023 Configure lint-staged in package.json to run ESLint, Prettier, and related tests
-- [ ] T024 Create .env.local.example with VITE_API_BASE_URL and other environment variables
-- [ ] T025 Create src/tests/setup.ts for Vitest global setup and Testing Library configuration
-- [ ] T026 Create src/tests/mocks/server.ts to initialize MSW server for tests
-- [ ] T027 Create src/tests/utils/render.tsx with custom render function including providers (QueryClient, Router)
-- [ ] T028 Create public/index.html with proper meta tags and favicon
-- [ ] T029 Update package.json scripts: dev, build, test, test:watch, test:coverage, test:e2e, lint, format
+- [x] T001 Initialize Vite project with React-TypeScript template in repository root
+- [x] T002 [P] Install core dependencies: react@18.2, react-dom@18.2, typescript@5.3
+- [x] T003 [P] Install state management: @tanstack/react-query@5, zustand@4
+- [x] T004 [P] Install styling: tailwindcss@3.4, autoprefixer, postcss
+- [x] T005 [P] Install form libraries: react-hook-form@7, zod@3, @hookform/resolvers
+- [x] T006 [P] Install HTTP client: axios@1.6
+- [x] T007 [P] Install dev dependencies: vitest@1, @testing-library/react@16, @testing-library/user-event@14, jsdom
+- [x] T008 [P] Install test utilities: msw@2, @testing-library/jest-dom
+- [x] T009 [P] Install E2E testing: @playwright/test@1.40
+- [x] T010 [P] Install UI libraries: @radix-ui/react-dialog, @radix-ui/react-dropdown-menu, @radix-ui/react-tooltip
+- [x] T011 [P] Install animation: framer-motion@11
+- [x] T012 [P] Install utilities: clsx, date-fns
+- [x] T013 [P] Install dev tools: eslint@8, @typescript-eslint/parser, @typescript-eslint/eslint-plugin, prettier@3
+- [x] T014 [P] Install git hooks: husky@9, lint-staged@15
+- [x] T015 Configure tsconfig.json with strict mode enabled and path aliases (@/components, @/hooks, etc.)
+- [x] T016 Configure vite.config.ts with path aliases, plugins, and build optimization
+- [x] T017 Configure vitest.config.ts with jsdom environment, coverage thresholds (80%), and setupFiles
+- [x] T018 Configure playwright.config.ts for Chromium/Firefox/Safari with baseURL and test directory
+- [x] T019 Configure tailwind.config.ts with custom design tokens (status colors, spacing, animations)
+- [x] T020 Configure .eslintrc.cjs with TypeScript rules, no-any, import ordering
+- [x] T021 Configure .prettierrc with code formatting rules
+- [x] T022 Setup Husky pre-commit hook to run lint-staged
+- [x] T023 Configure lint-staged in package.json to run ESLint, Prettier, and related tests
+- [x] T024 Create .env.local.example with VITE_API_BASE_URL and other environment variables
+- [x] T025 Create src/tests/setup.ts for Vitest global setup and Testing Library configuration
+- [x] T026 Create src/tests/mocks/server.ts to initialize MSW server for tests
+- [x] T027 Create src/tests/utils/render.tsx with custom render function including providers (QueryClient, Router)
+- [x] T028 Create public/index.html with proper meta tags and favicon
+- [x] T029 Update package.json scripts: dev, build, test, test:watch, test:coverage, test:e2e, lint, format
 
 ---
 
@@ -62,28 +62,28 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T030 [P] Create src/styles/tokens.ts with design tokens (colors, spacing, typography, animations)
-- [ ] T031 [P] Create src/styles/globals.css with Tailwind directives, CSS reset, and base styles
-- [ ] T032 [P] Create src/types/document.ts with DocumentDto, DocumentStatus, TagDto, ClassificationResultDto interfaces from data-model.md
-- [ ] T033 [P] Create src/types/api.ts with PagedResultDto, ApiErrorResponse, ApiError types
-- [ ] T034 [P] Create src/types/ui.ts with UI component prop types (StatusBadgeProps, etc.)
-- [ ] T035 [P] Create src/types/index.ts to export all type definitions
-- [ ] T036 [P] Create src/utils/constants.ts with BREAKPOINTS, FILE_SIZE, PAGINATION, POLLING constants
-- [ ] T037 [P] Create src/utils/validation.ts with Zod schemas (uploadDocumentSchema, searchDocumentSchema)
-- [ ] T038 [P] Create src/utils/formatting.ts with formatFileSize, formatDate utility functions
-- [ ] T039 Create src/services/api/client.ts with Axios instance, interceptors (auth token, error handling)
-- [ ] T040 Create src/services/api/documents.ts implementing IDocumentsApiClient interface from contracts/api-client.ts
-- [ ] T041 Create src/services/api/types.ts exporting API types for external use
-- [ ] T042 Create src/services/storage/localStorage.ts for token persistence
-- [ ] T043 Create src/state/useUIStore.ts Zustand store for theme, notifications, modals, detailPanelDocumentId
-- [ ] T044 Create src/tests/mocks/handlers.ts with MSW request handlers for all document API endpoints
-- [ ] T045 Create src/tests/mocks/data.ts with mock document data (mockDocuments, mockDocumentDto factory)
-- [ ] T046 Create src/tests/utils/factories.ts with test data builders for documents, tags, classification results
-- [ ] T047 Create src/App.tsx main application component with QueryClientProvider and Router setup
-- [ ] T048 Create src/main.tsx entry point with React.StrictMode and MSW worker initialization (if VITE_MOCK_API=true)
-- [ ] T049 [P] Write unit test for src/utils/formatting.ts in src/utils/formatting.test.ts
-- [ ] T050 [P] Write unit test for src/utils/validation.ts in src/utils/validation.test.ts
-- [ ] T051 [P] Write unit test for src/state/useUIStore.ts in src/state/useUIStore.test.ts
+- [x] T030 [P] Create src/styles/tokens.ts with design tokens (colors, spacing, typography, animations)
+- [x] T031 [P] Create src/styles/globals.css with Tailwind directives, CSS reset, and base styles
+- [x] T032 [P] Create src/types/document.ts with DocumentDto, DocumentStatus, TagDto, ClassificationResultDto interfaces from data-model.md
+- [x] T033 [P] Create src/types/api.ts with PagedResultDto, ApiErrorResponse, ApiError types
+- [x] T034 [P] Create src/types/ui.ts with UI component prop types (StatusBadgeProps, etc.)
+- [x] T035 [P] Create src/types/index.ts to export all type definitions
+- [x] T036 [P] Create src/utils/constants.ts with BREAKPOINTS, FILE_SIZE, PAGINATION, POLLING constants
+- [x] T037 [P] Create src/utils/validation.ts with Zod schemas (uploadDocumentSchema, searchDocumentSchema)
+- [x] T038 [P] Create src/utils/formatting.ts with formatFileSize, formatDate utility functions
+- [x] T039 Create src/services/api/client.ts with Axios instance, interceptors (auth token, error handling)
+- [x] T040 Create src/services/api/documents.ts implementing IDocumentsApiClient interface from contracts/api-client.ts
+- [x] T041 Create src/services/api/types.ts exporting API types for external use
+- [x] T042 Create src/services/storage/localStorage.ts for token persistence
+- [x] T043 Create src/state/useUIStore.ts Zustand store for theme, notifications, modals, detailPanelDocumentId
+- [x] T044 Create src/tests/mocks/handlers.ts with MSW request handlers for all document API endpoints
+- [x] T045 Create src/tests/mocks/data.ts with mock document data (mockDocuments, mockDocumentDto factory)
+- [x] T046 Create src/tests/utils/factories.ts with test data builders for documents, tags, classification results
+- [x] T047 Create src/App.tsx main application component with QueryClientProvider and Router setup
+- [x] T048 Create src/main.tsx entry point with React.StrictMode and MSW worker initialization (if VITE_MOCK_API=true)
+- [x] T049 [P] Write unit test for src/utils/formatting.ts in src/utils/formatting.test.ts
+- [x] T050 [P] Write unit test for src/utils/validation.ts in src/utils/validation.test.ts
+- [x] T051 [P] Write unit test for src/state/useUIStore.ts in src/state/useUIStore.test.ts
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 

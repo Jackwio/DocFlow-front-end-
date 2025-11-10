@@ -1,9 +1,21 @@
-import React from 'react';
+/**
+ * Basic App component test
+ */
+
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('App', () => {
+  it('renders DocFlow header', () => {
+    render(<App />);
+    const heading = screen.getByRole('heading', { name: 'DocFlow', level: 1 });
+    expect(heading).toBeInTheDocument();
+  });
+
+  it('renders welcome message', () => {
+    render(<App />);
+    const message = screen.getByText(/Welcome to DocFlow/i);
+    expect(message).toBeInTheDocument();
+  });
 });
