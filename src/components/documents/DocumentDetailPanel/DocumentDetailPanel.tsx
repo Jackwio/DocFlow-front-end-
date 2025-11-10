@@ -168,13 +168,13 @@ export function DocumentDetailPanel({
                     <span className={clsx(
                       'px-3 py-1 rounded-full text-xs font-semibold',
                       {
-                        'bg-yellow-100 text-yellow-800': document.status === 'Pending',
-                        'bg-green-100 text-green-800': document.status === 'Classified',
-                        'bg-red-100 text-red-800': document.status === 'Failed',
-                        'bg-blue-100 text-blue-800': document.status === 'Routed',
+                        'bg-yellow-100 text-yellow-800': document.status === 0, // Pending
+                        'bg-green-100 text-green-800': document.status === 1, // Classified
+                        'bg-red-100 text-red-800': document.status === 2, // Failed
+                        'bg-blue-100 text-blue-800': document.status === 3, // Routed
                       }
                     )}>
-                      {document.status}
+                      {['Pending', 'Classified', 'Failed', 'Routed'][document.status] || 'Unknown'}
                     </span>
                   </div>
 
