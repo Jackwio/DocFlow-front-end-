@@ -1,57 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DocumentList from '../components/documents/DocumentList';
 import DocumentUpload from '../components/documents/DocumentUpload';
+import { DocumentsApiService } from '../services/api/documents';
+import { DocumentListDto, DocumentStatus } from '../types/document';
+import { formatFileSize } from '../utils/formatting';
 import './Documents.css';
 
-// Sample data - in a real app, this would come from an API
-const sampleDocuments = [
-  {
-    id: '1',
-    name: 'Project Proposal.pdf',
-    type: 'pdf',
-    size: '2.5 MB',
-    uploadedBy: 'John Doe',
-    uploadedAt: '2025-11-10',
-    status: 'approved' as const,
-  },
-  {
-    id: '2',
-    name: 'Budget Report.xlsx',
-    type: 'xlsx',
-    size: '1.8 MB',
-    uploadedBy: 'Jane Smith',
-    uploadedAt: '2025-11-09',
-    status: 'pending' as const,
-  },
-  {
-    id: '3',
-    name: 'Meeting Notes.docx',
-    type: 'docx',
-    size: '450 KB',
-    uploadedBy: 'Bob Johnson',
-    uploadedAt: '2025-11-08',
-    status: 'approved' as const,
-  },
-];
+// Map API status to UI status
+const mapStatus = (status: DocumentStatus): 'pending' | 'approved' | 'rejected' => {
+  switch (status) {
+    case DocumentStatus.Classified:
+    case DocumentStatus.Routed:
+      return 'approved';
+    case DocumentStatus.Failed:
+      return 'rejected';
+    default:
+      return 'pending';
+  }
+};
 
 const Documents: React.FC = () => {
-  const [documents, setDocuments] = useState(sampleDocuments);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showUpload, setShowUpload] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
 
-  const handleUpload = (file: File) => {
-    // In a real app, you would upload the file to a server here
-    const newDocument = {
-      id: String(documents.length + 1),
-      name: file.name,
-      type: file.name.split('.').pop() || 'unknown',
-      size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
-      uploadedBy: 'Current User',
-      uploadedAt: new Date().toISOString().split('T')[0],
-      status: 'pending' as const,
-    };
-    setDocuments([...documents, newDocument]);
+  // Load documents from API
+  const loadDocuments = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await DocumentsApiService.getDocumentList({
+        skipCount: 0,
+        maxResultCount: 100,
+      });
+
+      // Transform API documents to UI format
+      const transformedDocs = result.items.map((doc: DocumentListDto) => ({
+        id: doc.id,
+        name: doc.fileName,
+        type: doc.fileName.split('.').pop() || 'unknown',
+        size: formatFileSize(doc.fileSize),
+        uploadedBy: 'System User', // API doesn't provide this yet
+        uploadedAt: new Date(doc.uploadedAt).toLocaleDateString(),
+        status: mapStatus(doc.status),
+      }));
+
+      setDocuments(transformedDocs);
+    } catch (err) {
+      console.error('Failed to load documents:', err);
+      setError('Failed to load documents. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  const handleUpload = async (file: File) => {
+    try {
+      setError(null);
+      await DocumentsApiService.uploadDocument(file, file.name);
+      
+      // Reload documents after successful upload
+      await loadDocuments();
+      setShowUpload(false);
+    } catch (err) {
+      console.error('Failed to upload document:', err);
+      setError('Failed to upload document. Please try again.');
+    }
   };
 
   const filteredDocuments = documents.filter((doc) => {
@@ -68,6 +89,19 @@ const Documents: React.FC = () => {
           Upload Document
         </button>
       </div>
+
+      {error && (
+        <div className="error-message" style={{ 
+          padding: '1rem', 
+          backgroundColor: '#fee', 
+          borderRadius: '4px', 
+          color: '#c00',
+          marginBottom: '1rem' 
+        }}>
+          {error}
+        </div>
+      )}
+
       <div className="documents-search">
         <input
           type="text"
@@ -87,9 +121,17 @@ const Documents: React.FC = () => {
           <option value="xlsx">Excel</option>
         </select>
       </div>
+
       <div className="documents-list">
-        <DocumentList documents={filteredDocuments} />
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: '#999' }}>
+            Loading documents...
+          </div>
+        ) : (
+          <DocumentList documents={filteredDocuments} />
+        )}
       </div>
+
       {showUpload && (
         <DocumentUpload
           onUpload={handleUpload}
