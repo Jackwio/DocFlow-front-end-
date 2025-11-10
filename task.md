@@ -8,11 +8,11 @@
 - [x] Create a basic layout structure
 
 ## Phase 2: Document Management Features
-- [ ] Create DocumentList component to display documents
-- [ ] Create DocumentCard component for individual document display
-- [ ] Create DocumentUpload component for file uploads
-- [ ] Add document preview functionality
-- [ ] Add document search and filter functionality
+- [x] Create DocumentList component to display documents
+- [x] Create DocumentCard component for individual document display
+- [x] Create DocumentUpload component for file uploads
+- [x] Add document preview functionality
+- [x] Add document search and filter functionality
 
 ## Phase 3: Workflow Visualization
 - [ ] Create WorkflowView component
