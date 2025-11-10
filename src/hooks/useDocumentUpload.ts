@@ -4,6 +4,7 @@
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { DocumentsApiService, type UploadProgressCallback } from '@/services/api/documents';
 import { useUIStore } from '@/state/useUIStore';
 import type { DocumentDto } from '@/types';
@@ -24,7 +25,7 @@ export function useDocumentUpload() {
       DocumentsApiService.uploadDocument(file, fileName, description, onProgress),
     onSuccess: (document: DocumentDto) => {
       // Invalidate document list query to refetch
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      void queryClient.invalidateQueries({ queryKey: ['documents'] });
 
       // Show success notification
       addNotification({

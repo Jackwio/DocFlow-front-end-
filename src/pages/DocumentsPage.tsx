@@ -4,8 +4,9 @@
  */
 
 import { useState } from 'react';
-import { UploadZone } from '@/components/documents/UploadZone';
+
 import { DocumentList } from '@/components/documents/DocumentList';
+import { UploadZone } from '@/components/documents/UploadZone';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useDocuments } from '@/hooks/useDocuments';
 import { useRetryClassification } from '@/hooks/useRetryClassification';

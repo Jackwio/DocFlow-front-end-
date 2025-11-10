@@ -3,7 +3,9 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import { uploadDocumentSchema, searchDocumentSchema, addManualTagSchema } from './validation';
+
 import { DocumentStatus } from '@/types';
 
 describe('uploadDocumentSchema', () => {

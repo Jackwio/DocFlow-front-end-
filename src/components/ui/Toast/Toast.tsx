@@ -3,8 +3,9 @@
  * Displays success/error/info messages with auto-dismiss
  */
 
-import { useEffect } from 'react';
 import { clsx } from 'clsx';
+import { useEffect } from 'react';
+
 import type { Notification } from '@/types';
 
 export interface ToastProps {

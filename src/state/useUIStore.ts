@@ -3,6 +3,7 @@
  */
 
 import { create } from 'zustand';
+
 import type { Notification } from '@/types';
 
 /**

@@ -2,8 +2,9 @@
  * Test data factory functions
  */
 
-import type { DocumentDto, DocumentListDto, TagDto, ClassificationResultDto } from '@/types';
 import { createMockDocument } from '../mocks/data';
+
+import type { DocumentDto, DocumentListDto, TagDto, ClassificationResultDto } from '@/types';
 
 /**
  * Create test document DTO

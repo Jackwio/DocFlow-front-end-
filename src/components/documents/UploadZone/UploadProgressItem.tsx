@@ -3,10 +3,12 @@
  * Displays individual file upload progress with status
  */
 
+import { clsx } from 'clsx';
+
+import type { FileUploadState } from './useFileUpload';
+
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { formatFileSize } from '@/utils/formatting';
-import { clsx } from 'clsx';
-import type { FileUploadState } from './useFileUpload';
 
 export interface UploadProgressItemProps {
   id: string;

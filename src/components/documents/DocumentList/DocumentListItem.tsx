@@ -3,11 +3,13 @@
  * Individual document list item with status badge and metadata
  */
 
+import { clsx } from 'clsx';
+
 import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import type { DocumentListDto } from '@/types';
+import { DocumentStatus } from '@/types';
 import { formatFileSize, formatDate } from '@/utils/formatting';
-import type { DocumentListDto, DocumentStatus } from '@/types';
-import { clsx } from 'clsx';
 
 export interface DocumentListItemProps {
   document: DocumentListDto;
@@ -26,7 +28,7 @@ export function DocumentListItem({
   onRetry,
   className,
 }: DocumentListItemProps) {
-  const isFailed = document.status === 2; // DocumentStatus.Failed
+  const isFailed = document.status === DocumentStatus.Failed;
 
   return (
     <div
@@ -78,7 +80,7 @@ export function DocumentListItem({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          <StatusBadge status={document.status as DocumentStatus} size="sm" />
+          <StatusBadge status={document.status} size="sm" />
           {isFailed && onRetry && (
             <Button
               variant="secondary"

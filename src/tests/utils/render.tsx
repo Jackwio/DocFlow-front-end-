@@ -2,9 +2,9 @@
  * Custom render function with providers for testing
  */
 
-import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, RenderOptions } from '@testing-library/react';
+import { ReactElement } from 'react';
 
 /**
  * Create a new QueryClient for each test
@@ -40,5 +40,6 @@ export function renderWithProviders(ui: ReactElement, options?: RenderOptions) {
 }
 
 // Re-export everything from Testing Library
+// eslint-disable-next-line react-refresh/only-export-components
 export * from '@testing-library/react';
 export { renderWithProviders as render };

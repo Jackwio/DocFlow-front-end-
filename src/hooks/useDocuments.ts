@@ -4,6 +4,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
+
 import { DocumentsApiService } from '@/services/api/documents';
 import { DocumentStatus } from '@/types';
 import { POLLING } from '@/utils/constants';

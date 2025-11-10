@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import { formatFileSize, formatDate, truncateText, getFileExtension, stringToColor } from './formatting';
 
 describe('formatFileSize', () => {

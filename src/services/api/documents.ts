@@ -4,6 +4,9 @@
  */
 
 import type { AxiosProgressEvent } from 'axios';
+
+import { getApiClient } from './client';
+
 import type {
   DocumentDto,
   DocumentListDto,
@@ -12,7 +15,6 @@ import type {
   PagedResultDto,
   AddManualTagDto,
 } from '@/types';
-import { getApiClient } from './client';
 
 /**
  * Upload progress callback
@@ -102,9 +104,29 @@ export class DocumentsApiService {
 
     // Normalize server response into our frontend DTO shape.
     // Some backends return `fileSizeBytes` and `creationTime` instead of `fileSize`/`uploadedAt`.
-    const data = response.data as PagedResultDto<any>;
+    interface ServerDocument {
+      id: string;
+      fileName: string;
+      fileSize?: number;
+      fileSizeBytes?: number;
+      status?: number;
+      documentStatus?: number;
+      uploadedAt?: string;
+      creationTime?: string;
+      classifiedAt?: string;
+      classifiedTime?: string;
+      tags?: string[];
+      tagNames?: string[];
+    }
 
-    const items: DocumentListDto[] = (data.items || []).map((it: any) => ({
+    interface ServerResponse {
+      totalCount?: number;
+      items?: ServerDocument[];
+    }
+
+    const data = response.data as ServerResponse;
+
+    const items: DocumentListDto[] = (data.items || []).map((it) => ({
       id: it.id,
       fileName: it.fileName,
       // prefer `fileSize`, fall back to `fileSizeBytes` then 0

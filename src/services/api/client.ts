@@ -3,6 +3,7 @@
  */
 
 import axios, { AxiosInstance, AxiosError, type InternalAxiosRequestConfig } from 'axios';
+
 import type { ApiErrorResponse } from '@/types';
 import { API_CONFIG } from '@/utils/constants';
 

@@ -3,9 +3,11 @@
  * Container for document list with loading and empty states
  */
 
-import { DocumentListItem } from './DocumentListItem';
-import type { DocumentListDto } from '@/types';
 import { clsx } from 'clsx';
+
+import { DocumentListItem } from './DocumentListItem';
+
+import type { DocumentListDto } from '@/types';
 
 export interface DocumentListProps {
   documents: DocumentListDto[];

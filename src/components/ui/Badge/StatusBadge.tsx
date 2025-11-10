@@ -4,6 +4,7 @@
  */
 
 import { clsx } from 'clsx';
+
 import { DocumentStatus } from '@/types';
 
 export type BadgeSize = 'sm' | 'md' | 'lg';

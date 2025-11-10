@@ -3,8 +3,10 @@
  */
 
 import { z } from 'zod';
-import { DocumentStatus } from '@/types';
+
 import { FILE_SIZE, ACCEPTED_MIME_TYPES } from './constants';
+
+import { DocumentStatus } from '@/types';
 
 /**
  * Upload document validation schema

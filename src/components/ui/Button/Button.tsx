@@ -3,8 +3,8 @@
  * Used throughout the application for user actions
  */
 
-import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';

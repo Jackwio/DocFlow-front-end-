@@ -3,8 +3,9 @@
  * Manages the notification queue and positioning
  */
 
-import { useUIStore } from '@/state/useUIStore';
 import { Toast } from './Toast';
+
+import { useUIStore } from '@/state/useUIStore';
 
 export function ToastContainer() {
   const notifications = useUIStore((state) => state.notifications);

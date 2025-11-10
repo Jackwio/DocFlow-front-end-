@@ -3,11 +3,13 @@
  * Drag-and-drop file upload zone with visual feedback
  */
 
-import { useRef, useState } from 'react';
 import { clsx } from 'clsx';
-import { Button } from '@/components/ui/Button';
-import { useFileUpload } from './useFileUpload';
+import { useRef, useState } from 'react';
+
 import { UploadProgressItem } from './UploadProgressItem';
+import { useFileUpload } from './useFileUpload';
+
+import { Button } from '@/components/ui/Button';
 import { FILE_SIZE, ACCEPTED_MIME_TYPES } from '@/utils/constants';
 
 export interface UploadZoneProps {
@@ -65,7 +67,7 @@ export function UploadZone({
 
     const validFiles = multiple ? files : [files[0]];
     onFilesSelected?.(validFiles);
-    uploadFiles(validFiles);
+    void uploadFiles(validFiles);
   };
 
   const handleBrowseClick = () => {

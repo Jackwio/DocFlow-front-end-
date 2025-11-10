@@ -4,6 +4,7 @@
  */
 
 import { clsx } from 'clsx';
+
 import { TagDto, TagSource } from '@/types';
 import { stringToColor } from '@/utils/formatting';
 
