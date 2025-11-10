@@ -65,7 +65,7 @@ export function UploadZone({
 
     const validFiles = multiple ? files : [files[0]];
     onFilesSelected?.(validFiles);
-    uploadFiles(validFiles);
+    void uploadFiles(validFiles);
   };
 
   const handleBrowseClick = () => {

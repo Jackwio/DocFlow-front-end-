@@ -16,7 +16,7 @@ export function useRetryClassification() {
     mutationFn: (documentId: string) => DocumentsApiService.retryClassification(documentId),
     onSuccess: (document: DocumentDto) => {
       // Invalidate queries to refresh the list
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      void queryClient.invalidateQueries({ queryKey: ['documents'] });
 
       // Show success notification
       addNotification({

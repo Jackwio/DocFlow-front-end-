@@ -24,6 +24,24 @@ export type UploadProgressCallback = (progress: {
 }) => void;
 
 /**
+ * Backend response types (may differ from frontend DTOs)
+ */
+interface BackendDocumentItem {
+  id: string;
+  fileName: string;
+  fileSize?: number;
+  fileSizeBytes?: number;
+  status?: number;
+  documentStatus?: number;
+  uploadedAt?: string;
+  creationTime?: string;
+  classifiedAt?: string;
+  classifiedTime?: string;
+  tags?: string[];
+  tagNames?: string[];
+}
+
+/**
  * Documents API service
  */
 export class DocumentsApiService {
@@ -102,9 +120,9 @@ export class DocumentsApiService {
 
     // Normalize server response into our frontend DTO shape.
     // Some backends return `fileSizeBytes` and `creationTime` instead of `fileSize`/`uploadedAt`.
-    const data = response.data as PagedResultDto<any>;
+    const data = response.data as PagedResultDto<BackendDocumentItem>;
 
-    const items: DocumentListDto[] = (data.items || []).map((it: any) => ({
+    const items: DocumentListDto[] = (data.items || []).map((it) => ({
       id: it.id,
       fileName: it.fileName,
       // prefer `fileSize`, fall back to `fileSizeBytes` then 0

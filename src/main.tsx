@@ -20,7 +20,7 @@ async function enableMocking() {
   return Promise.resolve();
 }
 
-enableMocking().then(() => {
+void enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <App />

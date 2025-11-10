@@ -24,7 +24,7 @@ export function useDocumentUpload() {
       DocumentsApiService.uploadDocument(file, fileName, description, onProgress),
     onSuccess: (document: DocumentDto) => {
       // Invalidate document list query to refetch
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      void queryClient.invalidateQueries({ queryKey: ['documents'] });
 
       // Show success notification
       addNotification({
