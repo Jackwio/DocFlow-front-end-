@@ -200,7 +200,7 @@
 - [ ] T101 [P] [US3] Create src/components/ui/Input/index.ts barrel export
 - [ ] T102 [P] [US3] Create src/components/ui/Chip/FilterChip.tsx with selected/unselected visual states (FR-010)
 - [ ] T103 [P] [US3] Create src/components/ui/Chip/index.ts barrel export
-- [ ] T104 [US3] Create src/hooks/useDocumentSearch.ts hook managing DocumentFilters state and search API call
+- [x] T104 [US3] Create src/hooks/useDocumentSearch.ts hook managing DocumentFilters state and search API call
 - [ ] T105 [US3] Create src/components/documents/SearchBar/SearchBar.tsx with instant filtering as user types (FR-009)
 - [ ] T106 [US3] Create src/components/documents/SearchBar/index.ts barrel export
 - [ ] T107 [US3] Create src/components/documents/FilterPanel/FilterPanel.tsx with status and tag filter chips
@@ -235,7 +235,7 @@
 - [ ] T120 [P] [US4] Create src/components/ui/Modal/index.ts barrel export
 - [ ] T121 [P] [US4] Create src/components/ui/Skeleton/Skeleton.tsx for loading placeholders
 - [ ] T122 [P] [US4] Create src/components/ui/Skeleton/index.ts barrel export
-- [ ] T123 [US4] Create src/hooks/useDocumentDetail.ts TanStack Query hook for fetching single document by ID
+- [x] T123 [US4] Create src/hooks/useDocumentDetail.ts TanStack Query hook for fetching single document by ID
 - [ ] T124 [US4] Create src/components/documents/DocumentDetailPanel/MetadataSection.tsx showing fileName, fileSize, dates, description
 - [ ] T125 [US4] Create src/components/documents/DocumentDetailPanel/ClassificationResults.tsx with confidence bars (FR-019)
 - [ ] T126 [US4] Create src/components/documents/DocumentDetailPanel/TagList.tsx showing automatic and manual tags
@@ -246,9 +246,9 @@
 - [ ] T131 [US4] Update useUIStore to manage detailPanelDocumentId for panel state
 - [ ] T132 [US4] Add loading states with Skeleton components while fetching document details
 - [ ] T133 [US4] Add manual tag input with auto-complete dropdown (FR-019 scenario 4, FR-022, FR-023)
-- [ ] T134 [US4] Create src/hooks/useAddManualTag.ts TanStack Query mutation for adding tags
-- [ ] T135 [US4] Create src/hooks/useRemoveManualTag.ts TanStack Query mutation for removing manual tags
-- [ ] T136 [US4] Implement tag add/remove actions with optimistic updates
+- [x] T134 [US4] Create src/hooks/useAddManualTag.ts TanStack Query mutation for adding tags
+- [x] T135 [US4] Create src/hooks/useRemoveManualTag.ts TanStack Query mutation for removing manual tags
+- [x] T136 [US4] Implement tag add/remove actions with optimistic updates
 
 **Checkpoint**: User Stories 1-4 all work independently - detail view doesn't interfere with upload, monitoring, or search
 
