@@ -6,6 +6,7 @@
 import { StatusBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { formatFileSize, formatDate } from '@/utils/formatting';
+import { HighlightedText } from '@/utils/highlighting';
 import type { DocumentListDto, DocumentStatus } from '@/types';
 import { clsx } from 'clsx';
 
@@ -15,6 +16,7 @@ export interface DocumentListItemProps {
   onSelect?: (id: string) => void;
   onClick?: (id: string) => void;
   onRetry?: (id: string) => void;
+  searchQuery?: string;
   className?: string;
 }
 
@@ -24,9 +26,10 @@ export function DocumentListItem({
   onSelect,
   onClick,
   onRetry,
+  searchQuery,
   className,
 }: DocumentListItemProps) {
-  const isFailed = document.status === 2; // DocumentStatus.Failed
+  const isFailed = document.status === DocumentStatus.Failed;
 
   return (
     <div
@@ -61,7 +64,7 @@ export function DocumentListItem({
           )}
           <div className="inline-block">
             <h3 className="text-sm font-semibold text-neutral-900 truncate">
-              {document.fileName}
+              <HighlightedText text={document.fileName} query={searchQuery} />
             </h3>
             <div className="flex items-center gap-2 mt-1 text-xs text-neutral-500">
               <span>{formatFileSize(document.fileSize)}</span>
@@ -78,7 +81,7 @@ export function DocumentListItem({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          <StatusBadge status={document.status as DocumentStatus} size="sm" />
+          <StatusBadge status={document.status} size="sm" />
           {isFailed && onRetry && (
             <Button
               variant="secondary"

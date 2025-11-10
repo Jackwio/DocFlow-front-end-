@@ -14,6 +14,8 @@ export interface DocumentListProps {
   onDocumentSelect?: (id: string) => void;
   onDocumentClick?: (id: string) => void;
   onDocumentRetry?: (id: string) => void;
+  totalCount?: number;
+  searchQuery?: string;
   className?: string;
 }
 
@@ -24,6 +26,8 @@ export function DocumentList({
   onDocumentSelect,
   onDocumentClick,
   onDocumentRetry,
+  totalCount,
+  searchQuery,
   className,
 }: DocumentListProps) {
   if (isLoading) {
@@ -86,17 +90,38 @@ export function DocumentList({
   }
 
   return (
-    <div className={clsx('space-y-3', className)} role="list">
-      {documents.map((document) => (
-        <DocumentListItem
-          key={document.id}
-          document={document}
-          isSelected={selectedDocumentIds.includes(document.id)}
-          onSelect={onDocumentSelect}
-          onClick={onDocumentClick}
-          onRetry={onDocumentRetry}
-        />
-      ))}
+    <div className={className}>
+      {/* Result count header */}
+      {totalCount !== undefined && (
+        <div className="mb-4 flex items-center justify-between">
+          <p className="text-sm text-neutral-600">
+            {totalCount === 0 ? (
+              'No documents found'
+            ) : totalCount === 1 ? (
+              '1 document found'
+            ) : (
+              <span>
+                <span className="font-semibold text-neutral-900">{totalCount}</span> documents found
+              </span>
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* Document list */}
+      <div className="space-y-3" role="list">
+        {documents.map((document) => (
+          <DocumentListItem
+            key={document.id}
+            document={document}
+            isSelected={selectedDocumentIds.includes(document.id)}
+            onSelect={onDocumentSelect}
+            onClick={onDocumentClick}
+            onRetry={onDocumentRetry}
+            searchQuery={searchQuery}
+          />
+        ))}
+      </div>
     </div>
   );
 }
