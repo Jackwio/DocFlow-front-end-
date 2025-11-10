@@ -20,7 +20,11 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    fs: {
+      strict: false,
+    },
   },
+  publicDir: 'public',
   build: {
     outDir: 'dist',
     sourcemap: true,

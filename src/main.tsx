@@ -10,7 +10,12 @@ import App from './App';
 async function enableMocking() {
   if (import.meta.env.VITE_MOCK_API === 'true') {
     const { worker } = await import('./tests/mocks/browser');
-    return worker.start();
+    return worker.start({
+      serviceWorker: {
+        url: '/mockServiceWorker.js',
+      },
+      onUnhandledRequest: 'bypass',
+    });
   }
   return Promise.resolve();
 }

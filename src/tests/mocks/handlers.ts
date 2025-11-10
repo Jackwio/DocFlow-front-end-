@@ -37,7 +37,19 @@ export const handlers = [
     const skipCount = parseInt(url.searchParams.get('skipCount') || '0');
     const maxResultCount = parseInt(url.searchParams.get('maxResultCount') || '20');
 
-    const items = mockDocuments.slice(skipCount, skipCount + maxResultCount) as DocumentListDto[];
+    // Convert DocumentDto to DocumentListDto (simplified version)
+    const items: DocumentListDto[] = mockDocuments
+      .slice(skipCount, skipCount + maxResultCount)
+      .map((doc) => ({
+        id: doc.id,
+        fileName: doc.fileName,
+        fileSize: doc.fileSize,
+        status: doc.status,
+        uploadedAt: doc.uploadedAt,
+        classifiedAt: doc.classifiedAt,
+        tags: doc.tags.map((tag) => tag.name), // Extract tag names
+      }));
+
     const result: PagedResultDto<DocumentListDto> = {
       totalCount: mockDocuments.length,
       items,
@@ -48,9 +60,20 @@ export const handlers = [
 
   // Search documents
   http.post(`${API_BASE_URL}/api/documents/search`, async () => {
+    // Convert DocumentDto to DocumentListDto
+    const items: DocumentListDto[] = mockDocuments.slice(0, 10).map((doc) => ({
+      id: doc.id,
+      fileName: doc.fileName,
+      fileSize: doc.fileSize,
+      status: doc.status,
+      uploadedAt: doc.uploadedAt,
+      classifiedAt: doc.classifiedAt,
+      tags: doc.tags.map((tag) => tag.name), // Extract tag names
+    }));
+
     const result: PagedResultDto<DocumentListDto> = {
       totalCount: mockDocuments.length,
-      items: mockDocuments.slice(0, 10) as DocumentListDto[],
+      items,
     };
     return HttpResponse.json(result, { status: 200 });
   }),

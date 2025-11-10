@@ -53,9 +53,9 @@ export function createMockDocument(overrides?: Partial<DocumentDto>): DocumentDt
 export const mockDocumentDto: DocumentDto = createMockDocument();
 
 /**
- * Mock document list
+ * Mock document list (as DocumentDto with full tag objects)
  */
-export const mockDocuments: (DocumentDto | DocumentListDto)[] = [
+export const mockDocuments: DocumentDto[] = [
   createMockDocument({
     id: '1',
     fileName: 'invoice-2024-001.pdf',
