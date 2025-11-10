@@ -133,6 +133,12 @@
 
 **Checkpoint**: User Story 1 is fully functional and testable independently - users can upload documents and see them in the list with status badges
 
+**✅ STATUS**: Implementation COMPLETE. Tests PENDING (need to be added retroactively for 80% coverage).
+**🔧 FIXES APPLIED**: 
+- Fixed NaN display issue in file sizes by normalizing API response fields (fileSizeBytes → fileSize)
+- Added defensive checks in formatFileSize utility
+- Mock handlers simulate Pending → Classified status transitions for local development
+
 ---
 
 ## Phase 4: User Story 2 - Real-Time Document Status Monitoring (Priority: P1)
@@ -162,6 +168,14 @@
 - [x] T093 [US2] Implement retry classification action with optimistic updates and error handling
 
 **Checkpoint**: User Stories 1 AND 2 work independently - users can upload documents and see automatic status updates with visual feedback
+
+**🟡 STATUS**: Partial implementation COMPLETE. Tests PENDING.
+**✅ COMPLETED**: StatusBadge animations, TagBadge component, polling in useDocuments, retry classification
+**⏳ PENDING**: Standalone usePolling hook (polling logic embedded directly in useDocuments), confidence score display
+
+**🟡 STATUS**: Partial implementation COMPLETE. Tests PENDING.
+**✅ COMPLETED**: StatusBadge animations, TagBadge component, polling in useDocuments, retry classification
+**⏳ PENDING**: Standalone usePolling hook (polling logic embedded directly in useDocuments), confidence score display
 
 ---
 
@@ -463,6 +477,30 @@ Stories integrate seamlessly because they're independently testable and don't sh
 ---
 
 ## Task Summary
+
+- **Total Tasks**: 194
+- **Setup Phase**: 29 tasks ✅ **ALL COMPLETE**
+- **Foundational Phase**: 22 tasks ✅ **ALL COMPLETE**
+- **User Story 1**: 28 tasks ✅ **ALL IMPLEMENTATION COMPLETE** ⚠️ **TESTS PENDING (6 test tasks)**
+- **User Story 2**: 14 tasks 🟡 **PARTIAL** (7/10 implementation ✅, 0/4 tests ❌)
+- **User Story 3**: 15 tasks ❌ **NOT STARTED** (useDocumentSearch hook exists but no UI components)
+- **User Story 4**: 23 tasks 🟡 **HOOKS ONLY** (useDocumentDetail, useAddManualTag, useRemoveManualTag, useClassificationHistory exist, no UI)
+- **User Story 5**: 16 tasks ❌ **NOT STARTED**
+- **User Story 6**: 12 tasks ❌ **NOT STARTED**
+- **Polish Phase**: 26 tasks ❌ **NOT STARTED**
+
+**Test Coverage**: 30+ dedicated test tasks ⚠️ **CRITICAL**: Only 3/30+ tests exist (formatting, validation, useUIStore)
+
+**Current MVP Status**: 🟡 User Story 1 implementation complete, functional for upload and list view, but missing test coverage
+
+**Priority Actions**:
+1. ⚠️ Add retroactive tests for User Story 1 (T052-T057) to meet 80% coverage requirement
+2. Complete User Story 2 implementation (T087, T090)
+3. Add tests for User Story 2 (T080-T083)
+
+---
+
+## Task Summary (Original)
 
 - **Total Tasks**: 194
 - **Setup Phase**: 29 tasks

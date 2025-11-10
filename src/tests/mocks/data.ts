@@ -55,32 +55,8 @@ export const mockDocumentDto: DocumentDto = createMockDocument();
 /**
  * Mock document list (as DocumentDto with full tag objects)
  */
-export const mockDocuments: DocumentDto[] = [
-  createMockDocument({
-    id: '1',
-    fileName: 'invoice-2024-001.pdf',
-    status: 1,
-    tags: [{ name: 'Invoice', source: 0, addedAt: new Date().toISOString() }],
-  }),
-  createMockDocument({
-    id: '2',
-    fileName: 'contract-2024-002.pdf',
-    status: 1,
-    tags: [{ name: 'Contract', source: 0, addedAt: new Date().toISOString() }],
-  }),
-  createMockDocument({
-    id: '3',
-    fileName: 'receipt-2024-003.pdf',
-    status: 0,
-    tags: [],
-  }),
-  createMockDocument({
-    id: '4',
-    fileName: 'failed-document.pdf',
-    status: 2,
-    tags: [],
-  }),
-];
+// Empty mock documents for development — remove fake/demo entries.
+export const mockDocuments: DocumentDto[] = [];
 
 /**
  * Factory function for creating test documents

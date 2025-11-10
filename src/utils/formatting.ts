@@ -13,11 +13,14 @@ export type FileSizeUnit = 'B' | 'KB' | 'MB' | 'GB';
  * Format file size in bytes to human-readable string
  */
 export function formatFileSize(bytes: number): string {
+  // Guard against invalid inputs
+  if (!Number.isFinite(bytes)) return '';
   if (bytes === 0) return '0 B';
 
   const k = 1024;
   const sizes: FileSizeUnit[] = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  // Ensure i is within bounds (for very small values i could be negative)
+  const i = Math.min(Math.max(Math.floor(Math.log(bytes) / Math.log(k)), 0), sizes.length - 1);
   const value = bytes / Math.pow(k, i);
 
   return `${value.toFixed(2)} ${sizes[i]}`;
