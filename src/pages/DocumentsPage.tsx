@@ -1,6 +1,6 @@
 /**
  * DocumentsPage component
- * Main page integrating upload zone and document list
+ * Main page integrating upload zone, search, filters, and document list
  */
 
 import { UploadZone } from '@/components/documents/UploadZone';
@@ -8,6 +8,7 @@ import { DocumentList } from '@/components/documents/DocumentList';
 import { BatchActionBar } from '@/components/documents/BatchActionBar';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useDocuments } from '@/hooks/useDocuments';
+import { useDocumentSearch } from '@/hooks/useDocumentSearch';
 import { useRetryClassification } from '@/hooks/useRetryClassification';
 import { useBatchRetry } from '@/hooks/useBatchRetry';
 import { useDocumentSelection } from '@/hooks/useDocumentSelection';
@@ -42,13 +43,31 @@ export function DocumentsPage() {
     clearSelection();
   };
 
-  const handleDocumentClick = (id: string) => {
+  const handleDocumentClick = useCallback((id: string) => {
     openDetailPanel(id);
-  };
+  }, [openDetailPanel]);
 
-  const handleDocumentRetry = (id: string) => {
+  const handleDocumentRetry = useCallback((id: string) => {
     retryMutation.mutate(id);
-  };
+  }, [retryMutation]);
+
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleStatusChange = useCallback((status: DocumentStatus | null) => {
+    setSelectedStatus(status);
+  }, []);
+
+  const handleTagsChange = useCallback((tags: string[]) => {
+    setSelectedTags(tags);
+  }, []);
+
+  const handleClearAllFilters = useCallback(() => {
+    setSearchQuery('');
+    setSelectedStatus(null);
+    setSelectedTags([]);
+  }, []);
 
   const handleBatchRetry = () => {
     // Filter to only retry failed documents from selection

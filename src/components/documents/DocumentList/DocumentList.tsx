@@ -17,6 +17,8 @@ export interface DocumentListProps {
   onDocumentRetry?: (id: string) => void;
   onSelectAll?: () => void;
   onDeselectAll?: () => void;
+  totalCount?: number;
+  searchQuery?: string;
   className?: string;
 }
 
@@ -29,6 +31,8 @@ export function DocumentList({
   onDocumentRetry,
   onSelectAll,
   onDeselectAll,
+  totalCount,
+  searchQuery,
   className,
 }: DocumentListProps) {
   const allSelected = documents.length > 0 && selectedDocumentIds.length === documents.length;
