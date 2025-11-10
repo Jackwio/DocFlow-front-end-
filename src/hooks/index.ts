@@ -21,3 +21,6 @@ export { useRemoveManualTag } from './useRemoveManualTag';
 
 export { useClassificationHistory } from './useClassificationHistory';
 export type { UseClassificationHistoryOptions } from './useClassificationHistory';
+
+export { useMediaQuery, useMediaQueryMatch } from './useMediaQuery';
+export type { MediaQueryResult, Breakpoint } from './useMediaQuery';

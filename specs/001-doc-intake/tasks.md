@@ -301,18 +301,18 @@
 
 ### Implementation for User Story 6
 
-- [ ] T157 [P] [US6] Create src/hooks/useMediaQuery.ts hook for responsive breakpoint detection
-- [ ] T158 [US6] Update DocumentsPage layout: three-column desktop (≥1024px) with sidebar, list, detail (FR-029 scenario 1)
-- [ ] T159 [US6] Update DocumentsPage layout: tablet (768-1023px) collapsible sidebar as drawer, full-width list (FR-029 scenario 2)
-- [ ] T160 [US6] Update DocumentsPage layout: mobile (<768px) single column, card view, bottom upload button (FR-029 scenario 3)
-- [ ] T161 [US6] Create src/components/ui/Drawer/Drawer.tsx for collapsible sidebar on tablet/mobile
-- [ ] T162 [US6] Create src/components/ui/Drawer/index.ts barrel export
-- [ ] T163 [US6] Update FilterPanel to work inside Drawer with hamburger menu trigger
-- [ ] T164 [US6] Update DocumentListItem to render as card on mobile (<768px) instead of table row
-- [ ] T165 [US6] Ensure all interactive elements have 44px minimum touch targets on mobile (FR-030)
-- [ ] T166 [US6] Update DocumentDetailPanel to overlay full-screen on tablet/mobile (FR-031)
-- [ ] T167 [US6] Add orientation change handling to preserve scroll position (FR-029 scenario 4)
-- [ ] T168 [US6] Test and verify responsive breakpoints match spec (desktop/tablet/mobile)
+- [x] T157 [P] [US6] Create src/hooks/useMediaQuery.ts hook for responsive breakpoint detection
+- [x] T158 [US6] Update DocumentsPage layout: three-column desktop (≥1024px) with sidebar, list, detail (FR-029 scenario 1)
+- [x] T159 [US6] Update DocumentsPage layout: tablet (768-1023px) collapsible sidebar as drawer, full-width list (FR-029 scenario 2)
+- [x] T160 [US6] Update DocumentsPage layout: mobile (<768px) single column, card view, bottom upload button (FR-029 scenario 3)
+- [x] T161 [US6] Create src/components/ui/Drawer/Drawer.tsx for collapsible sidebar on tablet/mobile
+- [x] T162 [US6] Create src/components/ui/Drawer/index.ts barrel export
+- [ ] T163 [US6] Update FilterPanel to work inside Drawer with hamburger menu trigger (SKIPPED - FilterPanel not implemented yet)
+- [x] T164 [US6] Update DocumentListItem to render as card on mobile (<768px) instead of table row
+- [x] T165 [US6] Ensure all interactive elements have 44px minimum touch targets on mobile (FR-030)
+- [ ] T166 [US6] Update DocumentDetailPanel to overlay full-screen on tablet/mobile (FR-031) (SKIPPED - DocumentDetailPanel not implemented yet)
+- [x] T167 [US6] Add orientation change handling to preserve scroll position (FR-029 scenario 4)
+- [x] T168 [US6] Test and verify responsive breakpoints match spec (desktop/tablet/mobile)
 
 **Checkpoint**: All 6 user stories work independently across all device sizes
 
