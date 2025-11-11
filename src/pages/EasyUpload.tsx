@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PageLayout from '../components/PageLayout';
+import { documentsApi, formatFileSize } from '../services/documentsApi';
 
 interface UploadFile {
   id: string;
@@ -7,49 +8,135 @@ interface UploadFile {
   size: number;
   progress: number;
   status: 'uploading' | 'completed' | 'failed';
+  file?: File;
+  error?: string;
 }
 
 const EasyUpload: React.FC = () => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadFile[]>([
-    {
-      id: '1',
-      name: 'Sample_Document_1.pdf',
-      size: 2048576,
-      progress: 100,
-      status: 'completed',
-    },
-    {
-      id: '2',
-      name: 'Sample_Document_2.docx',
-      size: 1536000,
-      progress: 65,
-      status: 'uploading',
-    },
-    {
-      id: '3',
-      name: 'Sample_Document_3.xlsx',
-      size: 3072000,
-      progress: 0,
-      status: 'failed',
-    },
-  ]);
-
+  const [uploadedFiles, setUploadedFiles] = useState<UploadFile[]>([]);
   const [selectedInbox, setSelectedInbox] = useState('Finance');
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
-    return (bytes / 1048576).toFixed(2) + ' MB';
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      handleFiles(Array.from(files));
+    }
+  };
+
+  const handleFiles = (files: File[]) => {
+    // Check file size (50MB limit)
+    const MAX_FILE_SIZE = 50 * 1024 * 1024;
+    const validFiles = files.filter((file) => {
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`File ${file.name} exceeds 50MB limit`);
+        return false;
+      }
+      return true;
+    });
+
+    // Add files to upload queue
+    const newFiles: UploadFile[] = validFiles.map((file) => ({
+      id: `temp-${Date.now()}-${Math.random()}`,
+      name: file.name,
+      size: file.size,
+      progress: 0,
+      status: 'uploading' as const,
+      file,
+    }));
+
+    setUploadedFiles((prev) => [...prev, ...newFiles]);
+
+    // Start uploading each file
+    newFiles.forEach((uploadFile) => {
+      uploadDocument(uploadFile);
+    });
+  };
+
+  const uploadDocument = async (uploadFile: UploadFile) => {
+    if (!uploadFile.file) return;
+
+    try {
+      const result = await documentsApi.uploadDocument(
+        uploadFile.file,
+        uploadFile.name,
+        `Uploaded to ${selectedInbox}`,
+        (progress) => {
+          setUploadedFiles((prev) =>
+            prev.map((f) =>
+              f.id === uploadFile.id ? { ...f, progress: Math.round(progress) } : f
+            )
+          );
+        }
+      );
+
+      // Update with actual document ID and mark as completed
+      setUploadedFiles((prev) =>
+        prev.map((f) =>
+          f.id === uploadFile.id
+            ? { ...f, id: result.id, progress: 100, status: 'completed' }
+            : f
+        )
+      );
+    } catch (error) {
+      // Mark as failed
+      setUploadedFiles((prev) =>
+        prev.map((f) =>
+          f.id === uploadFile.id
+            ? {
+                ...f,
+                progress: 0,
+                status: 'failed',
+                error: error instanceof Error ? error.message : 'Upload failed',
+              }
+            : f
+        )
+      );
+    }
   };
 
   const handleRetry = (fileId: string) => {
-    setUploadedFiles((prev) =>
-      prev.map((file) =>
-        file.id === fileId
-          ? { ...file, progress: 0, status: 'uploading' }
-          : file
-      )
-    );
+    const file = uploadedFiles.find((f) => f.id === fileId);
+    if (file && file.file) {
+      setUploadedFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileId ? { ...f, progress: 0, status: 'uploading', error: undefined } : f
+        )
+      );
+      uploadDocument(file);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(event.dataTransfer.files);
+    handleFiles(files);
+  };
+
+  const handleClickBrowse = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleView = async (fileId: string) => {
+    try {
+      const doc = await documentsApi.getDocument(fileId);
+      // Open blob URL in new tab
+      window.open(doc.blobUri, '_blank');
+    } catch (error) {
+      alert('Failed to view document: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
   };
 
   return (
@@ -80,13 +167,29 @@ const EasyUpload: React.FC = () => {
         </select>
       </div>
 
-      <div className="upload-zone">
+      <div
+        className="upload-zone"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        style={{
+          border: isDragging ? '2px dashed #5b6fff' : '2px dashed #ddd',
+          backgroundColor: isDragging ? '#f0f2ff' : 'transparent',
+        }}
+      >
         <div className="upload-zone-icon">📤</div>
         <h3>Drop files here or click to browse</h3>
         <p style={{ color: '#666', marginTop: '10px' }}>
           Supports all file types • Max 50MB per file
         </p>
-        <button className="action-button" style={{ marginTop: '20px' }}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+        />
+        <button className="action-button" style={{ marginTop: '20px' }} onClick={handleClickBrowse}>
           Select Files
         </button>
       </div>
@@ -133,12 +236,13 @@ const EasyUpload: React.FC = () => {
                   <button
                     className="action-button"
                     onClick={() => handleRetry(file.id)}
+                    title={file.error}
                   >
                     🔄 Retry
                   </button>
                 )}
                 {file.status === 'completed' && (
-                  <button className="action-button secondary">
+                  <button className="action-button secondary" onClick={() => handleView(file.id)}>
                     View
                   </button>
                 )}

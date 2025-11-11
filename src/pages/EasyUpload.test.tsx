@@ -38,18 +38,6 @@ describe('EasyUpload Component', () => {
       </BrowserRouter>
     );
     expect(screen.getByText('Upload Queue')).toBeInTheDocument();
-    expect(screen.getByText('Sample_Document_1.pdf')).toBeInTheDocument();
-  });
-
-  test('renders file status', () => {
-    render(
-      <BrowserRouter>
-        <EasyUpload />
-      </BrowserRouter>
-    );
-    const completedStatuses = screen.getAllByText('Completed');
-    expect(completedStatuses.length).toBeGreaterThan(0);
-    expect(screen.getByText('Uploading...')).toBeInTheDocument();
   });
 
   test('renders summary statistics', () => {
@@ -59,7 +47,8 @@ describe('EasyUpload Component', () => {
       </BrowserRouter>
     );
     expect(screen.getByText('Total Files')).toBeInTheDocument();
-    const threes = screen.getAllByText('3');
-    expect(threes.length).toBeGreaterThan(0);
+    expect(screen.getByText('Completed')).toBeInTheDocument();
+    expect(screen.getByText('In Progress')).toBeInTheDocument();
+    expect(screen.getByText('Failed')).toBeInTheDocument();
   });
 });
