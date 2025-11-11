@@ -1,5 +1,6 @@
 import React from 'react';
 import './EasyUpload.css';
+import { getApiBaseUrl } from '@/services/api/client';
 
 interface UploadedFile {
   name: string;
@@ -80,8 +81,9 @@ const EasyUpload: React.FC = () => {
         xhr.addEventListener('error', () => reject(new Error('Upload failed')));
         xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
 
-        // Replace with actual API endpoint
-        xhr.open('POST', '/api/documents/upload');
+        // Use API base URL so requests go to backend (not Vite dev server)
+        const apiBase = getApiBaseUrl();
+        xhr.open('POST', `${apiBase}/api/documents/upload`);
         
         // Add authentication header if available
         const token = localStorage.getItem('auth_token');
