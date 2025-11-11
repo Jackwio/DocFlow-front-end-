@@ -57,7 +57,9 @@ function App() {
     }
   };
 
-  return (
+  return page === 'dashboard' ? (
+    renderPage()
+  ) : (
     <Layout>
       {renderPage()}
     </Layout>
