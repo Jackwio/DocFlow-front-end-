@@ -77,13 +77,14 @@ describe('DocumentManagement Component', () => {
     expect(screen.getByText('All Documents')).toBeInTheDocument();
   });
 
-  test('renders upload button', async () => {
+  test('renders action buttons', async () => {
     render(
       <BrowserRouter>
         <DocumentManagement />
       </BrowserRouter>
     );
-    expect(screen.getByText('+ Upload New Document')).toBeInTheDocument();
+    expect(screen.getByText(/Add Tags/)).toBeInTheDocument();
+    expect(screen.getByText(/Download Selected/)).toBeInTheDocument();
   });
 
   test('renders document table with mock data', async () => {

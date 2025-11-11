@@ -22,6 +22,8 @@ export const documentsApi = {
   addManualTag: jest.fn(),
   removeManualTag: jest.fn(),
   getClassificationHistory: jest.fn(),
+  viewDocument: jest.fn(),
+  downloadDocument: jest.fn(),
 };
 
 export function getStatusDisplayName(status: DocumentStatus): string {

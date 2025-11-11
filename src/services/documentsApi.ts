@@ -311,6 +311,54 @@ export class DocumentsApiClient {
 
     return this.handleResponse<DocumentDto>(response);
   }
+
+  /**
+   * View document in browser
+   * Returns blob URL that can be opened in a new tab
+   */
+  async viewDocument(id: string): Promise<string> {
+    const response = await fetch(`${this.baseUrl}/api/documents/${id}/view`, {
+      method: 'GET',
+      headers: this.getHeaders(false),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to view document: ${response.status} ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  }
+
+  /**
+   * Download document file
+   * Returns blob URL and filename for download
+   */
+  async downloadDocument(id: string): Promise<{ url: string; filename: string }> {
+    const response = await fetch(`${this.baseUrl}/api/documents/${id}/download`, {
+      method: 'GET',
+      headers: this.getHeaders(false),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to download document: ${response.status} ${response.statusText}`);
+    }
+
+    // Extract filename from Content-Disposition header if available
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let filename = 'document';
+    if (contentDisposition) {
+      const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '');
+      }
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    
+    return { url, filename };
+  }
 }
 
 // Export a default instance

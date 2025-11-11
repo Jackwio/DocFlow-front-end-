@@ -131,9 +131,9 @@ const EasyUpload: React.FC = () => {
 
   const handleView = async (fileId: string) => {
     try {
-      const doc = await documentsApi.getDocument(fileId);
+      const url = await documentsApi.viewDocument(fileId);
       // Open blob URL in new tab
-      window.open(doc.blobUri, '_blank');
+      window.open(url, '_blank');
     } catch (error) {
       alert('Failed to view document: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }

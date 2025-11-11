@@ -88,8 +88,8 @@ const DocumentManagement: React.FC = () => {
 
   const handleView = async (docId: string) => {
     try {
-      const doc = await documentsApi.getDocument(docId);
-      window.open(doc.blobUri, '_blank');
+      const url = await documentsApi.viewDocument(docId);
+      window.open(url, '_blank');
     } catch (err) {
       alert('Failed to view document: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }
@@ -97,14 +97,16 @@ const DocumentManagement: React.FC = () => {
 
   const handleDownload = async (docId: string) => {
     try {
-      const doc = await documentsApi.getDocument(docId);
+      const { url, filename } = await documentsApi.downloadDocument(docId);
       // Create a temporary link and trigger download
       const link = document.createElement('a');
-      link.href = doc.blobUri;
-      link.download = doc.fileName;
+      link.href = url;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      // Clean up the URL object
+      URL.revokeObjectURL(url);
     } catch (err) {
       alert('Failed to download document: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }
