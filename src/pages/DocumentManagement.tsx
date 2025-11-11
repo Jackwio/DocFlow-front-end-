@@ -37,8 +37,8 @@ const DocumentManagement: React.FC = () => {
         skipCount,
         pageSize
       );
-      setDocuments(result.items);
-      setTotalCount(result.totalCount);
+      setDocuments(result?.items ?? []);
+      setTotalCount(result?.totalCount ?? 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load documents');
     } finally {
@@ -278,11 +278,14 @@ const DocumentManagement: React.FC = () => {
                     </td>
                     <td>{new Date(doc.uploadedAt).toLocaleString()}</td>
                     <td>
-                      {doc.tags.map((tag) => (
-                        <span key={tag} className="tag">
-                          {tag}
-                        </span>
-                      ))}
+                      {(doc.tags || []).map((tag) => {
+                        const tagName = typeof tag === 'string' ? tag : (tag as any).name || String(tag);
+                        return (
+                          <span key={tagName} className="tag">
+                            {tagName}
+                          </span>
+                        );
+                      })}
                     </td>
                     <td>
                       <button className="action-button" onClick={() => handleView(doc.id)}>
