@@ -80,37 +80,6 @@ const Dashboard: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <div className="dashboard-stats">
-        <div className="stat-card">
-          <div className="stat-icon">📄</div>
-          <div className="stat-content">
-            <h3>Total Documents</h3>
-            <p className="stat-number">156</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">⏳</div>
-          <div className="stat-content">
-            <h3>Pending Approval</h3>
-            <p className="stat-number">42</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">✅</div>
-          <div className="stat-content">
-            <h3>Approved</h3>
-            <p className="stat-number">98</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">🔥</div>
-          <div className="stat-content">
-            <h3>Uploaded Today</h3>
-            <p className="stat-number">24</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
