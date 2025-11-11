@@ -3,9 +3,16 @@ import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard';
 import Documents from './pages/Documents';
 import Workflow from './pages/Workflow';
+import DocumentManagement from './pages/DocumentManagement';
+import EasyUpload from './pages/EasyUpload';
+import SmartSearch from './pages/SmartSearch';
+import StatusTracking from './pages/StatusTracking';
+import TenantSettings from './pages/TenantSettings';
+import ComplianceAudit from './pages/ComplianceAudit';
+import AIFeatures from './pages/AIFeatures';
 import './App.css';
 
-type Page = 'dashboard' | 'documents' | 'workflow';
+type Page = 'dashboard' | 'documents' | 'workflow' | 'document-management' | 'easy-upload' | 'smart-search' | 'status-tracking' | 'tenant-settings' | 'compliance-audit' | 'ai-features';
 
 function App() {
   const [page, setPage] = React.useState<Page>('dashboard');
@@ -31,12 +38,28 @@ function App() {
         return <Documents />;
       case 'workflow':
         return <Workflow />;
+      case 'document-management':
+        return <DocumentManagement />;
+      case 'easy-upload':
+        return <EasyUpload />;
+      case 'smart-search':
+        return <SmartSearch />;
+      case 'status-tracking':
+        return <StatusTracking />;
+      case 'tenant-settings':
+        return <TenantSettings />;
+      case 'compliance-audit':
+        return <ComplianceAudit />;
+      case 'ai-features':
+        return <AIFeatures />;
       default:
         return <Dashboard />;
     }
   };
 
-  return (
+  return page === 'dashboard' ? (
+    renderPage()
+  ) : (
     <Layout>
       {renderPage()}
     </Layout>
