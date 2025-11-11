@@ -37,7 +37,12 @@ const DocumentManagement: React.FC = () => {
         skipCount,
         pageSize
       );
-      setDocuments(result?.items ?? []);
+      // Map backend `fileSizeBytes` (if present) to `fileSize` expected by UI
+      const items = (result?.items ?? []).map((item: any) => ({
+        ...item,
+        fileSize: item.fileSize ?? item.fileSizeBytes ?? 0,
+      }));
+      setDocuments(items);
       setTotalCount(result?.totalCount ?? 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load documents');

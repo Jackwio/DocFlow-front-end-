@@ -333,8 +333,10 @@ export function getStatusDisplayName(status: DocumentStatus): string {
 }
 
 // Helper function to format file size
-export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
+export function formatFileSize(bytes?: number | null): string {
+  if (bytes == null || typeof bytes !== 'number' || isNaN(bytes)) return '0 B';
+  const abs = Math.abs(bytes);
+  if (abs < 1024) return bytes + ' B';
+  if (abs < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
   return (bytes / 1048576).toFixed(2) + ' MB';
 }
