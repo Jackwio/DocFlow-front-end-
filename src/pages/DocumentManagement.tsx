@@ -151,9 +151,6 @@ const DocumentManagement: React.FC = () => {
       </div>
 
       <div style={{ marginBottom: '20px' }}>
-        <button className="action-button" onClick={() => window.location.href = '/easy-upload'}>
-          + Upload New Document
-        </button>
         <button
           className="action-button secondary"
           disabled={selectedDocs.length === 0}
@@ -281,7 +278,7 @@ const DocumentManagement: React.FC = () => {
                         {getStatusDisplayName(doc.status)}
                       </span>
                     </td>
-                    <td>{new Date(doc.uploadedAt).toLocaleString()}</td>
+                    <td>{new Date(doc.creationTime).toLocaleString()}</td>
                     <td>
                       {(doc.tags || []).map((tag) => {
                         const tagName = typeof tag === 'string' ? tag : (tag as any).name || String(tag);

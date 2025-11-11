@@ -37,7 +37,7 @@ export interface DocumentListDto {
   fileName: string;
   fileSize: number;
   status: DocumentStatus;
-  uploadedAt: string;
+  creationTime: string;
   classifiedAt?: string;
   tags: string[];
 }
