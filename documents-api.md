@@ -1,5 +1,7 @@
 # Documents API Documentation
 
+# 後端 API endpoint Base URL 為: https://localhost:44347
+
 ## 基本資訊
 
 **Base URL:** `/api/documents`
